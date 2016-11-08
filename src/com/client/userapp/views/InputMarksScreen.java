@@ -58,6 +58,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
         btnComplete.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnComplete.setText("Hoàn thành");
 
+        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},

@@ -6,8 +6,6 @@ import com.client.userapp.constants.WindowUtility;
 import com.marksmana.info.Information;
 import com.marksmana.info.SingleInformation;
 import com.marksmana.utils.Json;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -46,6 +44,7 @@ public class AboutFrame extends javax.swing.JPanel {
         lblInfoSchool.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblInfoSchool.setText("Thông tin trường học");
 
+        tblSchoolInfo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblSchoolInfo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
@@ -75,7 +74,6 @@ public class AboutFrame extends javax.swing.JPanel {
         });
         tblSchoolInfo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tblSchoolInfo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tblSchoolInfo.setShowHorizontalLines(false);
         jScrollPane1.setViewportView(tblSchoolInfo);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N

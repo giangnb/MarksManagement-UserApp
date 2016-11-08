@@ -23,16 +23,15 @@
  */
 package com.client.userapp.constants;
 
-import com.client.userapp.Application;
 import com.client.userapp.views.LoadingScreen;
 import java.awt.Component;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 /**
@@ -47,6 +46,15 @@ public final class WindowUtility {
         JDialog dialog = new JDialog(owner, title, true);
         dialog.add(dialogFrame.getContentPane());
         dialog.setMinimumSize(dialogFrame.getSize());
+        dialog.setLocationRelativeTo(owner);
+        dialog.setVisible(true);
+        return dialog;
+    }
+    
+    public static final JDialog showModalDialog(JFrame owner, String title, JPanel dialogFrame, WindowSize size) {
+        JDialog dialog = new JDialog(owner, title, true);
+        dialog.add(dialogFrame);
+        dialog.setMinimumSize(size.getDimension());
         dialog.setLocationRelativeTo(owner);
         dialog.setVisible(true);
         return dialog;

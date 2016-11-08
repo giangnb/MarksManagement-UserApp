@@ -142,6 +142,9 @@
       <SubComponents>
         <Component class="javax.swing.JList" name="lstStudents">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
               <StringArray count="5">
                 <StringItem index="0" value="[ ] Nguyen Van An"/>
@@ -223,6 +226,9 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="tblScores">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="5" rowCount="4">
                 <Column editable="false" title="M&#xf4;n h&#x1ecd;c" type="java.lang.String"/>

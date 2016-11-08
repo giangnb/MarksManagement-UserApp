@@ -44,6 +44,7 @@ public class ClassStudentFrame extends javax.swing.JPanel {
 
         btnChiTiet.setText("Chi tiết");
 
+        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},

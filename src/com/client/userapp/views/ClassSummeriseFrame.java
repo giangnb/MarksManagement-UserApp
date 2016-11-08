@@ -76,6 +76,7 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
         lblBulkName.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblBulkName.setText("{lblBulkName}");
 
+        lstSubjects.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lstSubjects.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }

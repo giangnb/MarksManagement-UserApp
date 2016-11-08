@@ -71,6 +71,7 @@ public class UserInfoFrame extends javax.swing.JPanel {
             }
         });
 
+        tblData.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
@@ -102,7 +103,6 @@ public class UserInfoFrame extends javax.swing.JPanel {
             }
         });
         tblData.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tblData.setShowHorizontalLines(false);
         tblData.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblData);
 

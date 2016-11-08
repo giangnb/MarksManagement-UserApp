@@ -43,6 +43,7 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
 
         btnDetail.setText("Chi tiết");
 
+        tblScore.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblScore.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},

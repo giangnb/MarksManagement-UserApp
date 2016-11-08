@@ -76,6 +76,7 @@ public class StudentMarksScreen extends javax.swing.JFrame {
         txtScoreAverage.setEditable(false);
         txtScoreAverage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
+        tabScoreInfo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tabScoreInfo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},

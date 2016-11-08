@@ -73,3 +73,5 @@ build/*
 errors.log
 currentaccount.dat
 nbproject/project.properties
+nbproject/private/private.xml
+nbproject/project.properties

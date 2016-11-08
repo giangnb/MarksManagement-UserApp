@@ -80,6 +80,7 @@ public class EditMarksScreen extends javax.swing.JFrame {
 
         btnChangeMark.setText("Sửa điểm");
 
+        tblMark.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblMark.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},

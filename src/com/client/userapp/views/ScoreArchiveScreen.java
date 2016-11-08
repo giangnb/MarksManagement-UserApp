@@ -81,6 +81,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        lstStudents.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lstStudents.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "[ ] Nguyen Van An", "[ ] Item 2", "[ ] Item 3", "[ ] Item 4", "[ ] Item 5" };
             public int getSize() { return strings.length; }
@@ -112,6 +113,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
 
         jLabel7.setText("Điểm trung bình:");
 
+        tblScores.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblScores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
