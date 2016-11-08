@@ -23,17 +23,27 @@
  */
 package com.client.userapp.views;
 
+import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
+import com.client.userapp.constants.WindowUtility;
+import com.marksmana.info.Information;
+import com.marksmana.info.SingleInformation;
+import com.marksmana.utils.Json;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Giang
  */
 public class UserInfoFrame extends javax.swing.JPanel {
+    private DefaultTableModel mTblData;
 
     /**
      * Creates new form UserInfoFrame1
      */
     public UserInfoFrame() {
         initComponents();
+        initTable();
     }
 
     /**
@@ -47,21 +57,21 @@ public class UserInfoFrame extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblData = new javax.swing.JTable();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Thông tin cá nhân");
 
-        jButton1.setText("Chỉnh sửa");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setText("Chỉnh sửa");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnEditActionPerformed(evt);
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -76,16 +86,25 @@ public class UserInfoFrame extends javax.swing.JPanel {
                 "Thông tin", "Dữ liệu"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setShowHorizontalLines(false);
-        jScrollPane1.setViewportView(jTable1);
+        tblData.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblData.setShowHorizontalLines(false);
+        tblData.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblData);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -96,7 +115,7 @@ public class UserInfoFrame extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnEdit)
                 .addContainerGap())
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
@@ -105,7 +124,7 @@ public class UserInfoFrame extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -114,16 +133,44 @@ public class UserInfoFrame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        try {
+            Information inf = Json.DeserializeObject(Application.TEACHER.getInfo(), Information.class);
+            for (int i = 0; i < mTblData.getRowCount(); i++) {
+                inf.put(mTblData.getValueAt(i, 0).toString(), mTblData.getValueAt(i, 1).toString());
+            }
+            Application.TEACHER.setInfo(Json.SerializeObject(inf));
+            int result = WebMethods.updateTeacher(Application.TEACHER);
+            if (result<=0)
+                throw new Exception(":(");
+        } catch (Exception ex) {
+            WindowUtility.showMessage(this, "Cảnh báo", 
+                    "Không Thể thay đổi thông tin cá nhân.", WindowUtility.WARNING);
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblData;
     // End of variables declaration//GEN-END:variables
+
+    private void initTable() {
+        mTblData = (DefaultTableModel) tblData.getModel();
+        mTblData.setRowCount(0);
+        try {
+            Information i = Json.DeserializeObject(
+                    Application.TEACHER.getInfo().replace("\\\"", "\""), Information.class);
+            for (SingleInformation si : i) {
+                if (!si.getKey().matches("[_]+[a-zA-Z0-9]*"))
+                    mTblData.addRow(new String[] {si.getKey(), si.getValue()});
+            }
+        } catch (Exception ex) {
+            WindowUtility.showMessage(this, "Lỗi", 
+                    "Không lấy được thông tin cá nhân.", WindowUtility.ERROR);
+        }
+    }
 }

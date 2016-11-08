@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.6" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -20,11 +20,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="cboMonHoc" min="-2" pref="125" max="-2" attributes="0"/>
+                      <Component id="cboSubject" min="-2" pref="125" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="btnTim2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnFind" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnChiTiet2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnDetail" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="lblMonHoc2" min="-2" max="-2" attributes="0"/>
@@ -43,10 +43,10 @@
               <Component id="lblMonHoc2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnChiTiet2" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnDetail" min="-2" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                      <Component id="cboMonHoc" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnTim2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cboSubject" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnFind" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -56,12 +56,12 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btnTim2">
+    <Component class="javax.swing.JButton" name="btnFind">
       <Properties>
         <Property name="text" type="java.lang.String" value="T&#xec;m"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnChiTiet2">
+    <Component class="javax.swing.JButton" name="btnDetail">
       <Properties>
         <Property name="text" type="java.lang.String" value="Chi ti&#x1ebf;t"/>
       </Properties>
@@ -73,7 +73,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="tblDiem">
+        <Component class="javax.swing.JTable" name="tblScore">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="5" rowCount="4">
@@ -84,8 +84,12 @@
                 <Column editable="false" title="H&#x1ec7; s&#x1ed1; 3" type="java.lang.Object"/>
               </Table>
             </Property>
+            <Property name="autoResizeMode" type="int" value="4"/>
+            <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+              <JTableSelectionModel selectionMode="0"/>
+            </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
           </Properties>
         </Component>
@@ -99,7 +103,7 @@
         <Property name="text" type="java.lang.String" value="M&#xf4;n h&#x1ecd;c"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="cboMonHoc">
+    <Component class="javax.swing.JComboBox" name="cboSubject">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">

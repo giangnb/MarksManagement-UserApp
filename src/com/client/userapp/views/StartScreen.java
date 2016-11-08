@@ -167,6 +167,11 @@ public class StartScreen extends javax.swing.JFrame {
         } catch (Exception ex) {
             Application.DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
         }
+        try {
+            Application.TIME_FORMAT = new SimpleDateFormat(Application.PROP.get("time_format").toString());
+        } catch (Exception ex) {
+            Application.TIME_FORMAT = new SimpleDateFormat("HH:mm");
+        }
         lblStatus.setText("Sẵn sàng");
         javax.swing.JFrame frm = new LoginScreen();
         frm.setVisible(true);

@@ -38,17 +38,6 @@ public class WebMethods implements Serializable{
     }
 
     /**
-     * Archive score of one student
-     * @param studentId
-     * @return 1 if success
-     */
-    public static int archiveToLogByStudent(int studentId) {
-        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
-        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
-        return port.archiveToLogByStudent(studentId);
-    }
-
-    /**
      * Get bulk by ID
      * @param id
      * @return 
@@ -270,5 +259,40 @@ public class WebMethods implements Serializable{
         com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
         com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
         return port.updateTeacher(teacher);
+    }
+
+    /**
+     * Update teacher's information
+     * @param teacher
+     * @return 
+     */
+    public static int updateTeacher(com.client.service.Teacher teacher) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.updateTeacher(teacher);
+    }
+
+    /**
+     * Archive score to log (and remove current scores)
+     * @param studentId
+     * @param remark - Teacher's remarks
+     * @return 
+     */
+    private static int archiveToLogByStudent(int studentId, java.lang.String remark) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.archiveToLogByStudent(studentId, remark);
+    }
+
+    /**
+     * Edit teacher's remark (only affect the latest log record
+     * @param studentId
+     * @param remark
+     * @return 
+     */
+    private static int editArchiveRemark(int studentId, java.lang.String remark) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.editArchiveRemark(studentId, remark);
     }
 }

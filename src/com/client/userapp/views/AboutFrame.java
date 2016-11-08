@@ -1,27 +1,14 @@
-/*
- * The MIT License
- *
- * Copyright 2016 Giang.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+
 package com.client.userapp.views;
+
+import com.client.userapp.Application;
+import com.client.userapp.constants.WindowUtility;
+import com.marksmana.info.Information;
+import com.marksmana.info.SingleInformation;
+import com.marksmana.utils.Json;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,6 +21,8 @@ public class AboutFrame extends javax.swing.JPanel {
      */
     public AboutFrame() {
         initComponents();
+        
+        initTable();
     }
 
     /**
@@ -84,6 +73,8 @@ public class AboutFrame extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblSchoolInfo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblSchoolInfo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblSchoolInfo.setShowHorizontalLines(false);
         jScrollPane1.setViewportView(tblSchoolInfo);
 
@@ -151,4 +142,19 @@ public class AboutFrame extends javax.swing.JPanel {
     private javax.swing.JSeparator spr;
     private javax.swing.JTable tblSchoolInfo;
     // End of variables declaration//GEN-END:variables
+
+    private void initTable() {
+        try {
+            DefaultTableModel m = (DefaultTableModel) tblSchoolInfo.getModel();
+            m.setRowCount(0);
+            Information i = Json.DeserializeObject(
+                    Application.PROP.get("school_info").toString().replace("\\\"", "\""), 
+                    Information.class);
+            for (SingleInformation si : i) {
+                m.addRow(new String[] {si.getKey(), si.getValue()});
+            }
+        } catch (Exception ex) {
+            WindowUtility.showMessage(this, "Lỗi", "Không lấy được thông tin trường học.", WindowUtility.ERROR);
+        }
+    }
 }

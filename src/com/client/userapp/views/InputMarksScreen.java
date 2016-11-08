@@ -20,6 +20,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
         initComponents();
         
         setSize(WindowSize.NARROW_WINDOW.getDimension());
+        setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
     }
 
     /**
@@ -83,6 +84,8 @@ public class InputMarksScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
 
         lblSubject.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N

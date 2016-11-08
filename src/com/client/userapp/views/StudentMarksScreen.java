@@ -22,6 +22,7 @@ public class StudentMarksScreen extends javax.swing.JFrame {
         
         setIconImage(Application.ICON);
         setSize(WindowSize.NORMAL_WINDOW.getDimension());
+        setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
         setLocationRelativeTo(null);
     }
 
@@ -90,11 +91,11 @@ public class StudentMarksScreen extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "STT", "Điểm", "Hệ số", "Người chấm"
+                "MS", "Điểm", "Hệ số", "Người chấm"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
@@ -108,6 +109,7 @@ public class StudentMarksScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tabScoreInfo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tabScoreInfo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tabScoreInfo.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tabScoreInfo);

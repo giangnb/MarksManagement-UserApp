@@ -5,17 +5,22 @@
  */
 package com.client.userapp.views;
 
+import com.client.userapp.Application;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author HuongUD
  */
 public class ClassMarksViewFrame extends javax.swing.JPanel {
+    private DefaultTableModel mTblScore;
 
     /**
      * Creates new form ClassMarksViewFrame
      */
     public ClassMarksViewFrame() {
         initComponents();
+        initTable();
     }
 
     /**
@@ -27,18 +32,18 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnTim2 = new javax.swing.JButton();
-        btnChiTiet2 = new javax.swing.JButton();
+        btnFind = new javax.swing.JButton();
+        btnDetail = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblDiem = new javax.swing.JTable();
+        tblScore = new javax.swing.JTable();
         lblMonHoc2 = new javax.swing.JLabel();
-        cboMonHoc = new javax.swing.JComboBox<>();
+        cboSubject = new javax.swing.JComboBox<>();
 
-        btnTim2.setText("Tìm");
+        btnFind.setText("Tìm");
 
-        btnChiTiet2.setText("Chi tiết");
+        btnDetail.setText("Chi tiết");
 
-        tblDiem.setModel(new javax.swing.table.DefaultTableModel(
+        tblScore.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -57,12 +62,15 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(tblDiem);
+        tblScore.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblScore.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblScore.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tblScore);
 
         lblMonHoc2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         lblMonHoc2.setText("Môn học");
 
-        cboMonHoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboSubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -72,11 +80,11 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(cboMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnTim2)
+                        .addComponent(btnFind)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnChiTiet2))
+                        .addComponent(btnDetail))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblMonHoc2)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -90,10 +98,10 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
                 .addComponent(lblMonHoc2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnChiTiet2)
+                    .addComponent(btnDetail)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cboMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnTim2)))
+                        .addComponent(cboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFind)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
         );
@@ -101,11 +109,20 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnChiTiet2;
-    private javax.swing.JButton btnTim2;
-    private javax.swing.JComboBox<String> cboMonHoc;
+    private javax.swing.JButton btnDetail;
+    private javax.swing.JButton btnFind;
+    private javax.swing.JComboBox<String> cboSubject;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblMonHoc2;
-    private javax.swing.JTable tblDiem;
+    private javax.swing.JTable tblScore;
     // End of variables declaration//GEN-END:variables
+
+    private void initTable() {
+        mTblScore = (DefaultTableModel) tblScore.getModel();
+        mTblScore.setColumnCount(2);
+        int max = Integer.parseInt(Application.PROP.get("max_coeff").toString());
+        for (int i = 1; i <= max; i++) {
+            mTblScore.addColumn("Hệ số "+i);
+        }
+    }
 }

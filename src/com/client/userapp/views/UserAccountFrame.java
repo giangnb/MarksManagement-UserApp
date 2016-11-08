@@ -223,19 +223,19 @@ public class UserAccountFrame extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void initData() {
+        lblLastLogin.setText("?");
+        lblLastChange.setText("?");
         try {
             lblErrors.setText("");
             txtName.setText(Application.TEACHER.getUsername());
             
-            System.out.println(Application.TEACHER.getInfo());
             Information i = Json.DeserializeObject(Application.TEACHER.getInfo(), Information.class);
-            long login = Long.parseLong(i.getValue("LastLogin"));
-            lblLastLogin.setText(Application.DATE_FORMAT.format(new Date(login)));
+            long login = Long.parseLong(i.getValue("_LastLogin"));
+            lblLastLogin.setText(Application.DATE_FORMAT.format(new Date(login))+" "+Application.TIME_FORMAT.format(new Date(login)));
+            long change = Long.parseLong(i.getValue("_LastChange"));
+            lblLastChange.setText(Application.DATE_FORMAT.format(new Date(change))+" "+Application.TIME_FORMAT.format(new Date(login)));
         } catch (Exception ex) {
-            lblLastLogin.setText("?");
         }
-        lblLastChange.setVisible(false);
-        lblRecentEditInfo.setVisible(false);
     }
 
     private boolean validateForm() {

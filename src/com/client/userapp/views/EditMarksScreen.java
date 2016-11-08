@@ -36,6 +36,7 @@ public class EditMarksScreen extends javax.swing.JFrame {
         }
         
         setSize(WindowSize.NORMAL_WINDOW.getDimension());
+        setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
     }
     
     public EditMarksScreen() {
@@ -105,6 +106,9 @@ public class EditMarksScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblMark.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblMark.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblMark.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblMark);
 
         lblName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N

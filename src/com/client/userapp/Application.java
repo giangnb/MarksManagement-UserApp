@@ -23,7 +23,7 @@ public class Application {
     public static Hashtable<String, Object> PROP;
     public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
     public static Image ICON;
-    public static SimpleDateFormat DATE_FORMAT;
+    public static SimpleDateFormat DATE_FORMAT, TIME_FORMAT;
 
     /**
      * @param args the command line arguments

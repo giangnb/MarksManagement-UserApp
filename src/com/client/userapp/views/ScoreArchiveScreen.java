@@ -39,6 +39,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
         initComponents();
         setIconImage(Application.ICON);
         setSize(WindowSize.LARGE_WINDOW.getDimension());
+        setMinimumSize(WindowSize.SMALL_WINDOW.getDimension());
         setLocationRelativeTo(null);
     }
 
@@ -81,7 +82,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         lstStudents.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "[ ] Item 1", "[ ] Item 2", "[ ] Item 3", "[ ] Item 4", "[ ] Item 5" };
+            String[] strings = { "[ ] Nguyen Van An", "[ ] Item 2", "[ ] Item 3", "[ ] Item 4", "[ ] Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -137,12 +138,16 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblScores.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblScores.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblScores.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblScores);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         jLabel3.setText("Nhận xét");
 
         txtRemark.setColumns(20);
+        txtRemark.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         txtRemark.setRows(5);
         jScrollPane3.setViewportView(txtRemark);
 
@@ -160,7 +165,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnPrev, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
                     .addComponent(lblClassName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -220,7 +225,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(lblAvgScore))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

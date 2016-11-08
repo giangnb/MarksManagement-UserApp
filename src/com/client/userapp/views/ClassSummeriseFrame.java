@@ -81,6 +81,7 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        lstSubjects.setLayoutOrientation(javax.swing.JList.VERTICAL_WRAP);
         jScrollPane1.setViewportView(lstSubjects);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

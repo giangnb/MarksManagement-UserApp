@@ -347,10 +347,7 @@ public class LoginScreen extends JFrame {
     
     private void initInfo() {
         try {
-            Information info = Json.DeserializeObject (
-                    Application.PROP.get("school_info").toString().replace("\\\"", "\""), 
-                    Information.class);
-            lblSchoolName.setText(info.getValue("name"));
+            lblSchoolName.setText(Application.PROP.get("school_name").toString());
             lblInformation.setText(
                     String.format("Học kì %s - Năm học %s", 
                             Application.PROP.get("semester"),

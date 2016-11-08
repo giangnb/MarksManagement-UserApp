@@ -33,6 +33,7 @@ public class MainScreen extends javax.swing.JFrame {
         setIconImage(Application.ICON);
         initContext();
         setSize(WindowSize.WIDE_WINDOW.getDimension());
+        setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
         setLocationRelativeTo(null);
     }
 
