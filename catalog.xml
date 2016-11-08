@@ -3,4 +3,6 @@
     <system systemId="http://marksmanager.azurewebsites.net/WebService/ApplicationWebService?wsdl" uri="xml-resources/web-service-references/ApplicationWebService/wsdl/marksmanager.azurewebsites.net/WebService/ApplicationWebService.wsdl"/>
     <system systemId="http://localhost:4321/MarksManager-Service/ApplicationWebService?wsdl" uri="xml-resources/web-service-references/ApplicationWebService/wsdl/localhost_4321/MarksManager-Service/ApplicationWebService.wsdl"/>
     <system systemId="http://localhost:4321/MarksManager-Service/ApplicationWebService?xsd=1" uri="xml-resources/web-service-references/ApplicationWebService/wsdl/localhost_4321/MarksManager-Service/ApplicationWebService.xsd_1.xsd"/>
+    <system systemId="http://marksmanager.56mfu9rwbj.us-east-1.elasticbeanstalk.com/ApplicationWebService?wsdl" uri="xml-resources/web-service-references/ApplicationWebService/wsdl/marksmanager.56mfu9rwbj.us-east-1.elasticbeanstalk.com/ApplicationWebService.wsdl"/>
+    <system systemId="http://marksmanager.56mfu9rwbj.us-east-1.elasticbeanstalk.com:80/ApplicationWebService?xsd=1" uri="xml-resources/web-service-references/ApplicationWebService/wsdl/marksmanager.56mfu9rwbj.us-east-1.elasticbeanstalk.com_80/ApplicationWebService.xsd_1.xsd"/>
 </catalog>
