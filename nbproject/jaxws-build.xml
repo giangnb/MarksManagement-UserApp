@@ -18,8 +18,8 @@
     </target>
     <target name="wsimport-client-ApplicationWebService" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/ApplicationWebService"/>
-        <property name="wsdl-ApplicationWebService" location="xml-resources/web-service-references/ApplicationWebService/wsdl/localhost_4321/MarksManager-Service/ApplicationWebService.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/ApplicationWebService" destdir="${build.generated.dir}/jax-wsCache/ApplicationWebService" wsdl="${wsdl-ApplicationWebService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:4321/MarksManager-Service/ApplicationWebService?wsdl" xnocompile="true" xendorsed="true" package="com.client.service">
+        <property name="wsdl-ApplicationWebService" location="xml-resources/web-service-references/ApplicationWebService/wsdl/marksmanager.56mfu9rwbj.us-east-1.elasticbeanstalk.com/ApplicationWebService.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/ApplicationWebService" destdir="${build.generated.dir}/jax-wsCache/ApplicationWebService" wsdl="${wsdl-ApplicationWebService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://marksmanager.56mfu9rwbj.us-east-1.elasticbeanstalk.com/ApplicationWebService?wsdl" xnocompile="true" xendorsed="true" package="com.client.service">
             <depends file="${wsdl-ApplicationWebService}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/ApplicationWebService"/>
         </wsimport>

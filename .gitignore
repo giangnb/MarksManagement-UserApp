@@ -72,3 +72,4 @@ dist/*
 build/*
 errors.log
 currentaccount.dat
+nbproject/project.properties
