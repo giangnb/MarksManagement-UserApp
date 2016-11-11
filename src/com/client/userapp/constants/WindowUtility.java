@@ -26,7 +26,6 @@ package com.client.userapp.constants;
 import com.client.userapp.views.LoadingScreen;
 import java.awt.Component;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -39,9 +38,9 @@ import javax.swing.SwingWorker;
  * @author Giang
  */
 public final class WindowUtility {
-    
-    public static final int DEFAULT=0, WARNING=1, ERROR=2;
-    
+
+    public static final int DEFAULT = 0, WARNING = 1, ERROR = 2;
+
     public static final JDialog showModalDialog(JFrame owner, String title, JFrame dialogFrame) {
         JDialog dialog = new JDialog(owner, title, true);
         dialog.add(dialogFrame.getContentPane());
@@ -50,7 +49,7 @@ public final class WindowUtility {
         dialog.setVisible(true);
         return dialog;
     }
-    
+
     public static final JDialog showModalDialog(JFrame owner, String title, JPanel dialogFrame, WindowSize size) {
         JDialog dialog = new JDialog(owner, title, true);
         dialog.add(dialogFrame);
@@ -59,11 +58,11 @@ public final class WindowUtility {
         dialog.setVisible(true);
         return dialog;
     }
-    
+
     public static final void showLoadingFrame(String title1, String title2, Callable<?> funct) {
         SwingWorker<?, ?> worker = new SwingWorker() {
             private final LoadingScreen scr = new LoadingScreen(title1, title2);
-            
+
             @Override
             protected Object doInBackground() throws Exception {
                 funct.call();
@@ -72,19 +71,19 @@ public final class WindowUtility {
 
             @Override
             protected void done() {
-                super.done(); 
+                super.done();
                 scr.dispose();
             }
         };
         worker.execute();
     }
-    
+
     public static final void showLoadingFrame(String title, Callable<?> funct) {
         showLoadingFrame(title, "", funct);
     }
-    
+
     public static final Future showMessage(Component parent, String title, String message, int type) {
-        switch(type) {
+        switch (type) {
             case DEFAULT:
                 JOptionPane.showMessageDialog(parent, message, title, JOptionPane.DEFAULT_OPTION);
                 break;
@@ -97,60 +96,42 @@ public final class WindowUtility {
         }
         return null;
     }
-    
+
     public static final String showInputPrompt(Component parent, String title, String message)
-        throws NullPointerException {
+            throws NullPointerException {
         return JOptionPane.showInputDialog(parent, message, title, JOptionPane.DEFAULT_OPTION);
     }
-    
+
     public static final int showConfirm(Component parent, String title, String message, String[] options)
-        throws NullPointerException {
+            throws NullPointerException {
         return JOptionPane.showOptionDialog(
-                parent, message, title, 0, JOptionPane.DEFAULT_OPTION, 
+                parent, message, title, 0, JOptionPane.DEFAULT_OPTION,
                 null, options, null);
     }
-    
+
     public static final ConfirmOption showConfirm(Component parent, String title, String message)
-        throws NullPointerException {
-        String[] options = new String[] {"Có", "Không"};
-        
+            throws NullPointerException {
+        String[] options = new String[]{"Có", "Không"};
+
         // 0 = YES; 1 = NO
         int choose = JOptionPane.showOptionDialog(
-                parent, message, title, 0, JOptionPane.DEFAULT_OPTION, 
+                parent, message, title, 0, JOptionPane.DEFAULT_OPTION,
                 null, options, null);
-        return choose==0?ConfirmOption.YES:ConfirmOption.NO;
+        return choose == 0 ? ConfirmOption.YES : ConfirmOption.NO;
     }
-    
-    public static final Future backGroundTask(Callable<Object> task) throws InterruptedException, ExecutionException {
-        SwingWorker<?, ?> worker = new SwingWorker() {
-            
-            @Override
-            protected Object doInBackground() throws Exception {
-                return task.call();
-            }
 
-            @Override
-            protected void done() {
-                super.done();
+    @Deprecated
+    public static final void backGroundTask(Callable task) {
+        new Thread(() -> {
+            try {
+                LoadingScreen load = new LoadingScreen("Đang tải...");
+                load.setVisible(true);
+                task.call();
+                load.dispose();
+            } catch (Exception ex) {
+                // ignore
             }
-        };
-        worker.execute();
-        return null;
+        }).start();
+//        return null;
     }
-    
-//    public static final void backGroundTask(Callable<String> task, JTextField txt) throws InterruptedException, ExecutionException {
-//        SwingWorker<?, ?> worker = new SwingWorker() {
-//            
-//            @Override
-//            protected Object doInBackground() throws Exception {
-//                return task.call();
-//            }
-//
-//            @Override
-//            protected void done() {
-//                super.done();
-//            }
-//        };
-//        worker.execute();
-//    }
 }

@@ -28,6 +28,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nh&#x1ead;p &#x111;i&#x1ec3;m"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniAddScoresActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
             </MenuItem>
@@ -44,7 +47,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/client/userapp/images/class.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="L&#x1edb;p ch&#x1ee7; nhi&#x1ec7;m"/>
+                <Property name="text" type="java.lang.String" value="L&#x1edb;p h&#x1ecd;c"/>
               </Properties>
             </Menu>
           </SubComponents>
@@ -54,6 +57,16 @@
             <Property name="text" type="java.lang.String" value="C&#xe1; nh&#xe2;n"/>
           </Properties>
           <SubComponents>
+            <Menu class="javax.swing.JMenu" name="mnuHeadClass">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/client/userapp/images/class.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="L&#x1edb;p ch&#x1ee7; nhi&#x1ec7;m"/>
+              </Properties>
+            </Menu>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mniUserInfo">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -175,6 +188,9 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
         <Container class="javax.swing.JPanel" name="pnlViewPort">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="24"/>
+          </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
         </Container>

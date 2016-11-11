@@ -5,25 +5,43 @@
  */
 package com.client.userapp.views;
 
+import com.client.service.Clazz;
+import com.client.service.Score;
+import com.client.service.Student;
+import com.client.service.Subject;
 import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
 import com.client.userapp.constants.WindowSize;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author LeDat
  */
 public class StudentMarksScreen extends javax.swing.JFrame {
+    private Student stu;
+    private Subject sub;
+    private List<Score> scores;
+    private DefaultTableModel mScore;
 
     /**
      * Creates new form frmStudentMarksFrame
      */
-    public StudentMarksScreen() {
+    public StudentMarksScreen(Student stu, Subject sub) {
+        this.stu = stu;
+        this.sub = sub;
+        
         initComponents();
         
+        mScore = (DefaultTableModel) tblScoreInfo.getModel();
         setIconImage(Application.ICON);
         setSize(WindowSize.NORMAL_WINDOW.getDimension());
         setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
         setLocationRelativeTo(null);
+        
+        initData();
+        initForm();
     }
 
     /**
@@ -45,9 +63,10 @@ public class StudentMarksScreen extends javax.swing.JFrame {
         txtSubject = new javax.swing.JTextField();
         txtScoreAverage = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabScoreInfo = new javax.swing.JTable();
+        tblScoreInfo = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Chi tiết điểm học sinh");
 
         lblScoreInfo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblScoreInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -76,8 +95,8 @@ public class StudentMarksScreen extends javax.swing.JFrame {
         txtScoreAverage.setEditable(false);
         txtScoreAverage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
-        tabScoreInfo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tabScoreInfo.setModel(new javax.swing.table.DefaultTableModel(
+        tblScoreInfo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblScoreInfo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -110,19 +129,19 @@ public class StudentMarksScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tabScoreInfo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tabScoreInfo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tabScoreInfo.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(tabScoreInfo);
-        if (tabScoreInfo.getColumnModel().getColumnCount() > 0) {
-            tabScoreInfo.getColumnModel().getColumn(0).setResizable(false);
-            tabScoreInfo.getColumnModel().getColumn(0).setHeaderValue("STT");
-            tabScoreInfo.getColumnModel().getColumn(1).setResizable(false);
-            tabScoreInfo.getColumnModel().getColumn(1).setHeaderValue("Điểm");
-            tabScoreInfo.getColumnModel().getColumn(2).setResizable(false);
-            tabScoreInfo.getColumnModel().getColumn(2).setHeaderValue("Hệ số");
-            tabScoreInfo.getColumnModel().getColumn(3).setResizable(false);
-            tabScoreInfo.getColumnModel().getColumn(3).setHeaderValue("Người chấm");
+        tblScoreInfo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblScoreInfo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblScoreInfo.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblScoreInfo);
+        if (tblScoreInfo.getColumnModel().getColumnCount() > 0) {
+            tblScoreInfo.getColumnModel().getColumn(0).setResizable(false);
+            tblScoreInfo.getColumnModel().getColumn(0).setHeaderValue("STT");
+            tblScoreInfo.getColumnModel().getColumn(1).setResizable(false);
+            tblScoreInfo.getColumnModel().getColumn(1).setHeaderValue("Điểm");
+            tblScoreInfo.getColumnModel().getColumn(2).setResizable(false);
+            tblScoreInfo.getColumnModel().getColumn(2).setHeaderValue("Hệ số");
+            tblScoreInfo.getColumnModel().getColumn(3).setResizable(false);
+            tblScoreInfo.getColumnModel().getColumn(3).setHeaderValue("Người chấm");
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -188,10 +207,31 @@ public class StudentMarksScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lblScoreInfo;
     private javax.swing.JLabel lblStudentName;
     private javax.swing.JLabel lblSubject;
-    private javax.swing.JTable tabScoreInfo;
+    private javax.swing.JTable tblScoreInfo;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtScoreAverage;
     private javax.swing.JTextField txtStudentName;
     private javax.swing.JTextField txtSubject;
     // End of variables declaration//GEN-END:variables
+
+    private void initData() {
+        mScore.setRowCount(0);
+        scores = WebMethods.getScoresByStudentAndSubject(stu, sub);
+        int count = 1;
+        int coeff=0;
+        double sc = 0d;
+        for (Score s : scores) {
+            mScore.addRow(new Object[]{count, s.getScore(), s.getCoefficient(), s.getTeacherId().getName()});
+            coeff+=s.getCoefficient();
+            sc+=s.getScore()*s.getCoefficient();
+            count++;
+        }
+        txtScoreAverage.setText(new Double(sc/coeff).toString());
+    }
+
+    private void initForm() {
+        txtID.setText(stu.getId()+"");
+        txtStudentName.setText(stu.getName());
+        txtSubject.setText(sub.getName());
+    }
 }

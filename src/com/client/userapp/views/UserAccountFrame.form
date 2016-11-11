@@ -127,7 +127,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblRecentEditInfo">
       <Properties>
-        <Property name="text" type="java.lang.String" value="L&#x1ea7;n thay &#x111;&#x1ed5;i th&#xf4;ng tin g&#x1ea7;n nh&#x1ea5;t:"/>
+        <Property name="text" type="java.lang.String" value="L&#x1ea7;n thay &#x111;&#x1ed5;i m&#x1ead;t kh&#x1ea9;u g&#x1ea7;n nh&#x1ea5;t:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblPass">

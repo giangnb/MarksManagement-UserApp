@@ -5,7 +5,19 @@
  */
 package com.client.userapp.views;
 
+import com.client.service.Clazz;
+import com.client.service.Score;
 import com.client.service.Subject;
+import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
+import com.client.userapp.constants.WindowUtility;
+import com.client.userapp.dto.ClazzDTO;
+import com.client.userapp.dto.StudentDTO;
+import com.client.userapp.dto.SubjectDTO;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -13,15 +25,36 @@ import com.client.service.Subject;
  */
 public class MarksViewFrame extends javax.swing.JPanel {
 
+    private DefaultComboBoxModel subjectModel, clazzModel;
+    private List<SubjectDTO> subjects = new ArrayList<>();
+    private List<ClazzDTO> clazz = new ArrayList<>();
+    private List<StudentDTO> student = new ArrayList<>();
+    private Subject sub;
+    private Clazz cla;
+    private DefaultTableModel mMarks;
+    private int maxCo=0;
+
     /**
      * Creates new form MarksViewPanel
      */
     public MarksViewFrame() {
         initComponents();
+        initData();
+        cboSubject.setEnabled(false);
     }
-    
-    public MarksViewFrame(Subject s) {
+
+    public MarksViewFrame(Subject sub) {
+        this.sub = sub;
         initComponents();
+        initData();
+        cboSubject.setEnabled(false);
+    }
+
+    public MarksViewFrame(Clazz cl) {
+        this.cla = cl;
+        initComponents();
+        initData();
+        cboClass.setEnabled(false);
     }
 
     /**
@@ -34,7 +67,7 @@ public class MarksViewFrame extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblMarks = new javax.swing.JTable();
         cboSubject = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -42,9 +75,10 @@ public class MarksViewFrame extends javax.swing.JPanel {
         cboClass = new javax.swing.JComboBox<>();
         btnInputMark = new javax.swing.JButton();
         btnEditMark = new javax.swing.JButton();
+        btnViewMarks = new javax.swing.JButton();
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblMarks.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblMarks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -56,10 +90,10 @@ public class MarksViewFrame extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -70,12 +104,22 @@ public class MarksViewFrame extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane3.setViewportView(jTable1);
+        tblMarks.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblMarks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblMarks.getTableHeader().setReorderingAllowed(false);
+        tblMarks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMarksMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblMarks);
 
         cboSubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Toán", "Lý ", "Hóa" }));
+        cboSubject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboSubjectActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         jLabel1.setText("Môn học");
@@ -84,11 +128,28 @@ public class MarksViewFrame extends javax.swing.JPanel {
         jLabel2.setText("Lớp");
 
         cboClass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10A1", "10A2", "10A3", "10A4" }));
+        cboClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboClassActionPerformed(evt);
+            }
+        });
 
         btnInputMark.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnInputMark.setText("Nhập điểm");
+        btnInputMark.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInputMarkActionPerformed(evt);
+            }
+        });
 
         btnEditMark.setText("Sửa điểm");
+
+        btnViewMarks.setText("Xem điểm");
+        btnViewMarks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewMarksActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -108,8 +169,10 @@ public class MarksViewFrame extends javax.swing.JPanel {
                                 .addComponent(jLabel1))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(cboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnViewMarks)))
+                        .addGap(120, 120, Short.MAX_VALUE)
                         .addComponent(btnEditMark)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnInputMark))
@@ -128,7 +191,8 @@ public class MarksViewFrame extends javax.swing.JPanel {
                     .addComponent(cboClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnInputMark)
-                    .addComponent(btnEditMark))
+                    .addComponent(btnEditMark)
+                    .addComponent(btnViewMarks))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -137,16 +201,150 @@ public class MarksViewFrame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnInputMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInputMarkActionPerformed
+        // TODO add your handling code here:
+//        JFrame fr = new InputMarksScreen(sub);
+    }//GEN-LAST:event_btnInputMarkActionPerformed
+
+    private void btnViewMarksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewMarksActionPerformed
+        // TODO add your handling code here:
+        if (cla == null || sub == null) {
+            WindowUtility.showMessage(this, "Thông báo", "Vui lòng chọn đầy đủ lớp và môn học!", WindowUtility.WARNING);
+            return;
+        }
+        new Thread(() -> {
+            mMarks.setRowCount(0);
+            
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            
+            student = StudentDTO.getStudentDTOList(WebMethods.getStudentsByClass(cla));
+            String[] marks = new String[maxCo];
+            ArrayList<String> ctx;
+            List<Score> score;
+            for (StudentDTO s : student) {
+                ctx = new ArrayList<>();
+                ctx.add(s.getName());
+                
+                score = WebMethods.getScoresByStudentAndSubject(s.toStudent(), sub);
+                for (String m : marks) {
+                    m = "";
+                }
+                for (Score sc : score) {
+                    marks[sc.getCoefficient()-1] += sc.getScore()+" ; ";
+                }
+                for (String m : marks) {
+                    ctx.add(m.substring(4, m.length()-2));
+                }
+                mMarks.addRow(ctx.toArray());
+            }
+            
+            load.dispose();
+        }).start();
+    }//GEN-LAST:event_btnViewMarksActionPerformed
+
+    private void cboClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboClassActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (((ClazzDTO) cboClass.getSelectedItem()).getId() > 0) {
+                this.cla = ((ClazzDTO) cboClass.getSelectedItem()).toClazz();
+                if (sub == null) {
+                    cboSubject.setEnabled(true);
+                }
+            } else {
+                cla = null;
+            }
+        } catch (Exception ex) {
+            // ignore
+        }
+    }//GEN-LAST:event_cboClassActionPerformed
+
+    private void cboSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSubjectActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (((SubjectDTO) cboSubject.getSelectedItem()).getId() > 0) {
+                this.sub = ((SubjectDTO) cboSubject.getSelectedItem()).toSubject();
+                if (cla == null) {
+                    cboClass.setEnabled(true);
+                }
+            } else {
+                sub = null;
+            }
+        } catch (Exception ex) {
+            //ignore
+        }
+    }//GEN-LAST:event_cboSubjectActionPerformed
+
+    private void tblMarksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMarksMouseClicked
+        // TODO add your handling code here:
+        if (tblMarks.getSelectedRow() < 0) {
+            return;
+        }
+        btnEditMark.setEnabled(true);
+        btnInputMark.setEnabled(true);
+    }//GEN-LAST:event_tblMarksMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditMark;
     private javax.swing.JButton btnInputMark;
+    private javax.swing.JButton btnViewMarks;
     private javax.swing.JComboBox<String> cboClass;
     private javax.swing.JComboBox<String> cboSubject;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblMarks;
     // End of variables declaration//GEN-END:variables
+
+    private void initData() {
+        new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+
+            // Main thread:
+            mMarks = (DefaultTableModel) tblMarks.getModel();
+            mMarks.setColumnCount(1);
+            maxCo = Integer.parseInt(Application.PROP.get("max_coeff").toString());
+            for (int i = 1; i <= maxCo; i++) {
+                mMarks.addColumn("Hệ số " + i);
+            }
+            mMarks.setRowCount(0);
+
+            btnEditMark.setEnabled(false);
+            btnInputMark.setEnabled(false);
+
+            if (sub == null) {
+                subjects = SubjectDTO.getSubjectDTOList();
+                Subject s = new Subject();
+                s.setId(-1);
+                s.setName("-- Chọn môn --");
+                subjects.add(0, new SubjectDTO(s));
+
+                subjectModel = new DefaultComboBoxModel(subjects.toArray(new SubjectDTO[subjects.size()]));
+            } else {
+                subjectModel = new DefaultComboBoxModel();
+                subjectModel.addElement(new SubjectDTO(sub));
+            }
+
+            if (cla == null) {
+                clazz = ClazzDTO.getClazzDTOList();
+                Clazz c = new Clazz();
+                c.setId(-1);
+                c.setName("-- Chọn lớp --");
+                clazz.add(0, new ClazzDTO(c));
+
+                clazzModel = new DefaultComboBoxModel(clazz.toArray(new ClazzDTO[clazz.size()]));
+            } else {
+                clazzModel = new DefaultComboBoxModel();
+                clazzModel.addElement(new ClazzDTO(cla));
+            }
+
+            cboClass.setModel(clazzModel);
+            cboSubject.setModel(subjectModel);
+
+            load.dispose();
+        }).start();
+    }
 }

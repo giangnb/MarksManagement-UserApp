@@ -5,6 +5,8 @@
  */
 package com.client.userapp.views;
 
+import java.awt.Color;
+
 /**
  *
  * @author Giang
@@ -17,20 +19,25 @@ public class LoadingScreen extends javax.swing.JFrame {
     public LoadingScreen() {
         initComponents();
         jLabel2.setText("");
+        getContentPane().setBackground(new Color(255, 255, 255));
+        setOpacity(0.8f);
         setLocationRelativeTo(null);
     }
     public LoadingScreen(String text) {
         initComponents();
         jLabel1.setText(text);
         jLabel2.setText("");
+        getContentPane().setBackground(new Color(255, 255, 255));
+        setOpacity(0.8f);
         setLocationRelativeTo(null);
     }
     public LoadingScreen(String text, String text2) {
         initComponents();
         jLabel1.setText(text);
         jLabel2.setText(text2);
+        getContentPane().setBackground(new Color(255, 255, 255));
+        setOpacity(0.8f);
         setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     /**
@@ -48,15 +55,17 @@ public class LoadingScreen extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("...");
         setAlwaysOnTop(true);
+        setBackground(new java.awt.Color(255, 255, 255));
         setFocusable(false);
         setFocusableWindowState(false);
         setUndecorated(true);
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Đang tải, xin chờ...");
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

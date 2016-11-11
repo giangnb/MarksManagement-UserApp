@@ -5,7 +5,11 @@
  */
 package com.client.userapp.views;
 
+import com.client.service.Clazz;
+import com.client.service.Subject;
+import com.client.userapp.Application;
 import com.client.userapp.constants.WindowSize;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -13,14 +17,23 @@ import com.client.userapp.constants.WindowSize;
  */
 public class InputMarksScreen extends javax.swing.JFrame {
 
+    private Subject subject;
+    private Clazz clazz;
+    
     /**
      * Creates new form InputMarksScreen
      */
-    public InputMarksScreen() {
+    public InputMarksScreen(Subject subject, Clazz clazz) {
+        this.subject = subject;
+        this.clazz = clazz;
+        
         initComponents();
+        
+        initData();
         
         setSize(WindowSize.NARROW_WINDOW.getDimension());
         setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
+        setTitle(String.format("Nhập điểm môn %s - Lớp %s", subject.getName(), clazz.getName()));
     }
 
     /**
@@ -35,7 +48,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        spnCoefficient = new javax.swing.JSpinner();
+        txtCoefficient = new javax.swing.JSpinner();
         jSeparator1 = new javax.swing.JSeparator();
         btnStart = new javax.swing.JButton();
         btnComplete = new javax.swing.JButton();
@@ -52,6 +65,8 @@ public class InputMarksScreen extends javax.swing.JFrame {
         jLabel2.setText("Lớp: ");
 
         jLabel3.setText("Hệ số:");
+
+        txtCoefficient.setModel(new javax.swing.SpinnerNumberModel(1, null, null, 1));
 
         btnStart.setText("Bắt đầu");
 
@@ -110,7 +125,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(spnCoefficient, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
+                            .addComponent(txtCoefficient, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
                             .addComponent(lblSubject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblClazz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -134,7 +149,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3)
-                    .addComponent(spnCoefficient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCoefficient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnStart)
                         .addComponent(btnComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -145,7 +160,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel3, spnCoefficient});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel3, txtCoefficient});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -161,6 +176,13 @@ public class InputMarksScreen extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblClazz;
     private javax.swing.JLabel lblSubject;
-    private javax.swing.JSpinner spnCoefficient;
+    private javax.swing.JSpinner txtCoefficient;
     // End of variables declaration//GEN-END:variables
+
+    private void initData() {
+        SpinnerNumberModel model = (SpinnerNumberModel) txtCoefficient.getModel();
+        model.setMinimum(1);
+        model.setMaximum(Integer.parseInt(Application.PROP.get("max_coeff").toString()));
+        txtCoefficient.setValue(1);
+    }
 }

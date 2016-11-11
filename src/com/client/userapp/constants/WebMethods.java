@@ -101,17 +101,6 @@ public class WebMethods implements Serializable{
     }
 
     /**
-     * Get all scores of a class
-     * @param classId
-     * @return Scores list
-     */
-    public static java.util.List<com.client.service.Score> getScoresByClass(int classId) {
-        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
-        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
-        return port.getScoresByClass(classId);
-    }
-
-    /**
      * Get all scores of a subject
      * @param subjectId
      * @return Scores list
@@ -126,10 +115,10 @@ public class WebMethods implements Serializable{
      * Get all students
      * @return Students list
      */
-    public static java.util.List<com.client.service.Student> getStudent() {
+    public static java.util.List<com.client.service.Student> getStudents() {
         com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
         com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
-        return port.getStudent();
+        return port.getStudents();
     }
 
     /**
@@ -148,7 +137,7 @@ public class WebMethods implements Serializable{
      * @param classId
      * @return Students list
      */
-    public static java.util.List<com.client.service.Student> getStudentsByClass(int classId) {
+    public static java.util.List<com.client.service.Student> getStudentsByClass(Clazz classId) {
         com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
         com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
         return port.getStudentsByClass(classId);
@@ -278,7 +267,7 @@ public class WebMethods implements Serializable{
      * @param remark - Teacher's remarks
      * @return 
      */
-    private static int archiveToLogByStudent(int studentId, java.lang.String remark) {
+    public static int archiveToLogByStudent(int studentId, java.lang.String remark) {
         com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
         com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
         return port.archiveToLogByStudent(studentId, remark);
@@ -290,9 +279,33 @@ public class WebMethods implements Serializable{
      * @param remark
      * @return 
      */
-    private static int editArchiveRemark(int studentId, java.lang.String remark) {
+    public static int editArchiveRemark(int studentId, java.lang.String remark) {
         com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
         com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
         return port.editArchiveRemark(studentId, remark);
+    }
+
+    public static java.util.List<com.client.service.Score> getScoresBySubjectAndClass(com.client.service.Subject subject, com.client.service.Clazz clazz) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.getScoresBySubjectAndClass(subject, clazz);
+    }
+
+    public static java.util.List<com.client.service.Score> getScoresByStudentAndSubject(com.client.service.Student student, com.client.service.Subject subject) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.getScoresByStudentAndSubject(student, subject);
+    }
+
+    public static int addScore(com.client.service.Score score) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.addScore(score);
+    }
+
+    public static java.util.List<com.client.service.Clazz> getClassesByTeacher(com.client.service.Teacher teacher) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.getClassesByTeacher(teacher);
     }
 }

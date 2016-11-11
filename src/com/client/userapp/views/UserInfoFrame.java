@@ -147,6 +147,7 @@ public class UserInfoFrame extends javax.swing.JPanel {
             WindowUtility.showMessage(this, "Cảnh báo", 
                     "Không Thể thay đổi thông tin cá nhân.", WindowUtility.WARNING);
         }
+        initTable();
     }//GEN-LAST:event_btnEditActionPerformed
 
 

@@ -5,7 +5,19 @@
  */
 package com.client.userapp.views;
 
+import com.client.service.Clazz;
+import com.client.service.Score;
+import com.client.service.Student;
+import com.client.service.Subject;
 import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
+import com.client.userapp.dto.StudentDTO;
+import com.client.userapp.dto.SubjectDTO;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -13,14 +25,24 @@ import javax.swing.table.DefaultTableModel;
  * @author HuongUD
  */
 public class ClassMarksViewFrame extends javax.swing.JPanel {
+
     private DefaultTableModel mTblScore;
+    private DefaultComboBoxModel mCbo;
+    private Clazz clazz;
+    private Subject sub;
+    private int maxCo = 0;
 
     /**
      * Creates new form ClassMarksViewFrame
      */
-    public ClassMarksViewFrame() {
+    public ClassMarksViewFrame(Clazz clazz) {
+        this.clazz = clazz;
         initComponents();
+        btnDetail.setEnabled(false);
+        btnFind.setEnabled(false);
+        maxCo = Integer.parseInt(Application.PROP.get("max_coeff").toString());
         initTable();
+        initCombo();
     }
 
     /**
@@ -40,8 +62,18 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
         cboSubject = new javax.swing.JComboBox<>();
 
         btnFind.setText("Tìm");
+        btnFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindActionPerformed(evt);
+            }
+        });
 
         btnDetail.setText("Chi tiết");
+        btnDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailActionPerformed(evt);
+            }
+        });
 
         tblScore.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblScore.setModel(new javax.swing.table.DefaultTableModel(
@@ -66,12 +98,22 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
         tblScore.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tblScore.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblScore.getTableHeader().setReorderingAllowed(false);
+        tblScore.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblScoreMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblScore);
 
         lblMonHoc2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         lblMonHoc2.setText("Môn học");
 
         cboSubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboSubject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboSubjectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -108,6 +150,82 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblScoreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblScoreMouseClicked
+        // TODO add your handling code here:
+        if (tblScore.getSelectedRow() >= 0) {
+            btnDetail.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblScoreMouseClicked
+
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+        // TODO add your handling code here:
+        new Thread(() -> {
+            btnFind.setEnabled(false);
+            btnFind.setText("...");
+            mTblScore.setRowCount(0);
+
+            List<StudentDTO> student = StudentDTO.getStudentDTOList(WebMethods.getStudentsByClass(clazz));
+            String[] marks = new String[maxCo];
+            ArrayList<String> ctx;
+            List<Score> score;
+            for (StudentDTO s : student) {
+                ctx = new ArrayList<>();
+                ctx.add(s.getId() + "");
+                ctx.add(s.getName());
+
+                score = WebMethods.getScoresByStudentAndSubject(s.toStudent(), sub);
+                for (String m : marks) {
+                    m = "";
+                }
+                for (Score sc : score) {
+                    marks[sc.getCoefficient() - 1] += sc.getScore() + " ; ";
+                }
+                for (String m : marks) {
+                    try {
+                        ctx.add(m.substring(4, m.length() - 2));
+                    } catch (NullPointerException ex) {
+                    }
+                }
+                mTblScore.addRow(ctx.toArray());
+
+                btnFind.setEnabled(true);
+                btnFind.setText("Tìm");
+            }
+        }).start();
+    }//GEN-LAST:event_btnFindActionPerformed
+
+    private void cboSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSubjectActionPerformed
+        // TODO add your handling code here:
+        try {
+            sub = ((SubjectDTO) cboSubject.getSelectedItem()).toSubject();
+            if (sub.getId() > 0) {
+                btnFind.setEnabled(true);
+            }
+        } catch (Exception ex) {
+            btnFind.setEnabled(false);
+        }
+    }//GEN-LAST:event_cboSubjectActionPerformed
+
+    private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
+        // TODO add your handling code here:
+        new Thread(() -> {
+            btnDetail.setEnabled(false);
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+
+            int id = Integer.parseInt(
+                    mTblScore.getValueAt(tblScore.getSelectedRow(), 0).toString()
+            );
+            Student stu = WebMethods.getStudentById(id);
+
+            StudentMarksScreen screen = new StudentMarksScreen(stu, sub);
+            screen.setVisible(true);
+
+            load.dispose();
+            btnDetail.setEnabled(true);
+        }).start();
+    }//GEN-LAST:event_btnDetailActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDetail;
@@ -123,7 +241,18 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
         mTblScore.setColumnCount(2);
         int max = Integer.parseInt(Application.PROP.get("max_coeff").toString());
         for (int i = 1; i <= max; i++) {
-            mTblScore.addColumn("Hệ số "+i);
+            mTblScore.addColumn("Hệ số " + i);
         }
+        mTblScore.setRowCount(0);
+    }
+
+    private void initCombo() {
+        List<SubjectDTO> subjects = SubjectDTO.getSubjectDTOList();
+        Subject s = new Subject();
+        s.setId(0);
+        s.setName("-- Chọn môn học --");
+        subjects.add(0, new SubjectDTO(s));
+        mCbo = new DefaultComboBoxModel(subjects.toArray());
+        cboSubject.setModel(mCbo);
     }
 }

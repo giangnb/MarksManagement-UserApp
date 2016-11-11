@@ -15,6 +15,11 @@ import com.client.userapp.constants.WindowUtility;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -48,7 +53,6 @@ public class MainScreen extends javax.swing.JFrame {
 
         jMenu4 = new javax.swing.JMenu();
         scrViewPort = new javax.swing.JScrollPane();
-        pnlViewPort = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mniAddScores = new javax.swing.JMenuItem();
@@ -56,6 +60,8 @@ public class MainScreen extends javax.swing.JFrame {
         mnuSubjects = new javax.swing.JMenu();
         mnuClasses = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        mnuHeadClass = new javax.swing.JMenu();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         mniUserInfo = new javax.swing.JMenuItem();
         mniAccount = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -79,6 +85,11 @@ public class MainScreen extends javax.swing.JFrame {
         mniAddScores.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mniAddScores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/userapp/images/marking.png"))); // NOI18N
         mniAddScores.setText("Nhập điểm");
+        mniAddScores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniAddScoresActionPerformed(evt);
+            }
+        });
         jMenu1.add(mniAddScores);
         jMenu1.add(jSeparator1);
 
@@ -87,12 +98,17 @@ public class MainScreen extends javax.swing.JFrame {
         jMenu1.add(mnuSubjects);
 
         mnuClasses.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/userapp/images/class.png"))); // NOI18N
-        mnuClasses.setText("Lớp chủ nhiệm");
+        mnuClasses.setText("Lớp học");
         jMenu1.add(mnuClasses);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Cá nhân");
+
+        mnuHeadClass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/userapp/images/class.png"))); // NOI18N
+        mnuHeadClass.setText("Lớp chủ nhiệm");
+        jMenu2.add(mnuHeadClass);
+        jMenu2.add(jSeparator2);
 
         mniUserInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/userapp/images/user.png"))); // NOI18N
         mniUserInfo.setText("Thông tin cá nhân");
@@ -176,19 +192,19 @@ public class MainScreen extends javax.swing.JFrame {
     private void mniSupportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSupportActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(
-                this, 
-                "Liên hệ hỗ trợ:\n\nKỹ thuật\n"+
-                        Application.PROP.get("admin_contact")+
-                        "\n\nQuản lý\n"+
-                        Application.PROP.get("manager_contact"), 
-                "Hỗ trợ", 
+                this,
+                "Liên hệ hỗ trợ:\n\nKỹ thuật\n"
+                + Application.PROP.get("admin_contact")
+                + "\n\nQuản lý\n"
+                + Application.PROP.get("manager_contact"),
+                "Hỗ trợ",
                 JOptionPane.DEFAULT_OPTION);
     }//GEN-LAST:event_mniSupportActionPerformed
 
     private void mniLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniLogoutActionPerformed
         // TODO add your handling code here:
         ConfirmOption conf = WindowUtility.showConfirm(this, "Đăng xuất", "Bạn chuẩn bị đăng xuất khỏi tài khoản.\nBạn chắc chắn không?");
-        
+
         if (conf.equals(ConfirmOption.YES)) {
             Application.TEACHER = null;
             this.dispose();
@@ -207,6 +223,13 @@ public class MainScreen extends javax.swing.JFrame {
         setViewPort(new UserAccountFrame());
     }//GEN-LAST:event_mniAccountActionPerformed
 
+    private void mniAddScoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAddScoresActionPerformed
+        // TODO add your handling code here:
+        new Thread(() -> {
+            setViewPort(new MarksViewFrame());
+        }).start();
+    }//GEN-LAST:event_mniAddScoresActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -214,6 +237,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JMenuItem mniAbout;
@@ -224,39 +248,42 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JMenuItem mniUserInfo;
     private javax.swing.JMenuItem mniUserManual;
     private javax.swing.JMenu mnuClasses;
+    private javax.swing.JMenu mnuHeadClass;
     private javax.swing.JMenu mnuSubjects;
-    private javax.swing.JPanel pnlViewPort;
+    static final javax.swing.JPanel pnlViewPort = new javax.swing.JPanel();
     private javax.swing.JScrollPane scrViewPort;
     // End of variables declaration//GEN-END:variables
 
     private void initContext() {
         JMenuItem mni;
         // Title bar & Windows
-        if (Application.TEACHER!=null) {
-            setTitle(getTitle()+" - ["+Application.TEACHER.getName()+"]");
+        if (Application.TEACHER != null) {
+            setTitle(getTitle() + " - [" + Application.TEACHER.getName() + "]");
         }
         setLocationRelativeTo(null);
-        
+
         // Classes list 
-        List<Clazz> classes = Application.TEACHER.getClazzList();
-        if (classes.size()<=0) {
+        List<Clazz> classes = WebMethods.getClasses();
+        if (classes.size() <= 0) {
             mnuClasses.setEnabled(false);
         } else {
             for (Clazz c : classes) {
-                mni = new JMenuItem(c.getName());
-                mni.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        mniClassActionPerformed(e, c);
-                    }
-                });
-                mnuClasses.add(mni);
+                if (c.getId()>1) { // Exclude archive class
+                    mni = new JMenuItem(c.getName());
+                    mni.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            mniClassActionPerformed(e, c);
+                        }
+                    });
+                    mnuClasses.add(mni);
+                }
             }
         }
-        
+
         // Subjects list
         List<Subject> subs = WebMethods.getSubjects();
-        if (subs.size()<=0) {
+        if (subs.size() <= 0) {
             mnuSubjects.setEnabled(false);
         } else {
             for (Subject sub : subs) {
@@ -270,26 +297,47 @@ public class MainScreen extends javax.swing.JFrame {
                 mnuSubjects.add(mni);
             }
         }
+        
+        // Head classes list
+        List<Clazz> hcla = WebMethods.getClassesByTeacher(Application.TEACHER);
+        if (hcla.size()<=0) {
+            mnuHeadClass.setEnabled(false);
+        } else {
+            for (Clazz c : hcla) {
+                mni = new JMenuItem(c.getName());
+                mni.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        mniHeadClassActionPerformed(e, c);
+                    }
+                });
+                mnuHeadClass.add(mni);
+            }
+        }
     }
-    
-    private void mniSubActionPerformed(ActionEvent evt, Subject s) {
+
+    private Callable mniSubActionPerformed(ActionEvent evt, Subject s) {
         setViewPort(new MarksViewFrame(s));
+        return null;
     }
-    
-    private void mniClassActionPerformed(ActionEvent evt, Clazz c) {
-        setViewPort(new MarksViewFrame());
+
+    private Callable mniClassActionPerformed(ActionEvent evt, Clazz c) {
+        setViewPort(new MarksViewFrame(c));
+        return null;
     }
-    
-    private void setViewPort(JPanel panel) {
+
+    private void mniHeadClassActionPerformed(ActionEvent evt, Clazz c) {
+        ClassViewFrame.resetTabbedPane();
+        setViewPort(new ClassViewFrame(c));
+    }
+
+    static void setViewPort(JPanel panel) {
         pnlViewPort.setVisible(false);
         pnlViewPort.removeAll();
-        //pnlViewPort.repaint();
         pnlViewPort.add(panel);
         pnlViewPort.repaint();
         pnlViewPort.revalidate();
         pnlViewPort.updateUI();
         pnlViewPort.setVisible(true);
-        repaint();
-        revalidate();
     }
 }

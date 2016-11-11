@@ -82,7 +82,7 @@ public class UserAccountFrame extends javax.swing.JPanel {
 
         jLabel1.setText("Tên đăng nhập:");
 
-        lblRecentEditInfo.setText("Lần thay đổi thông tin gần nhất:");
+        lblRecentEditInfo.setText("Lần thay đổi mật khẩu gần nhất:");
 
         lblPass.setText("Mật khẩu:");
 
@@ -233,7 +233,7 @@ public class UserAccountFrame extends javax.swing.JPanel {
             long login = Long.parseLong(i.getValue("_LastLogin"));
             lblLastLogin.setText(Application.DATE_FORMAT.format(new Date(login))+" "+Application.TIME_FORMAT.format(new Date(login)));
             long change = Long.parseLong(i.getValue("_LastChange"));
-            lblLastChange.setText(Application.DATE_FORMAT.format(new Date(change))+" "+Application.TIME_FORMAT.format(new Date(login)));
+            lblLastChange.setText(Application.DATE_FORMAT.format(new Date(change))+" "+Application.TIME_FORMAT.format(new Date(change)));
         } catch (Exception ex) {
         }
     }

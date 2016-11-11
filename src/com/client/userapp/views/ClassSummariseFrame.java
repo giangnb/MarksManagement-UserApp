@@ -5,17 +5,28 @@
  */
 package com.client.userapp.views;
 
+import com.client.service.Bulk;
+import com.client.service.Clazz;
+import com.client.service.Subject;
+import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
+import javax.swing.DefaultListModel;
+
 /**
  *
  * @author HuongUD
  */
-public class ClassSummeriseFrame extends javax.swing.JPanel {
+public class ClassSummariseFrame extends javax.swing.JPanel {
+
+    private Clazz clazz;
 
     /**
      * Creates new form ClassSummeriseFrame
      */
-    public ClassSummeriseFrame() {
+    public ClassSummariseFrame(Clazz clazz) {
+        this.clazz = clazz;
         initComponents();
+        initData();
     }
 
     /**
@@ -28,8 +39,6 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
     private void initComponents() {
 
         lblKhoi = new javax.swing.JLabel();
-        lblMonHoc = new javax.swing.JLabel();
-        txtMonHoc = new javax.swing.JSeparator();
         btnViewScores = new javax.swing.JButton();
         btnEditScores = new javax.swing.JButton();
         btnArchive = new javax.swing.JButton();
@@ -42,16 +51,23 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
         lblStudentCount = new javax.swing.JLabel();
         lblSchoolYear = new javax.swing.JLabel();
         lblBulkName = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lstSubjects = new javax.swing.JList<>();
+        btnViewStudentList = new javax.swing.JButton();
 
         lblKhoi.setText("Khối:");
 
-        lblMonHoc.setText("Môn học:");
-
         btnViewScores.setText("Xem điểm");
+        btnViewScores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewScoresActionPerformed(evt);
+            }
+        });
 
         btnEditScores.setText("Nhập/Sửa điểm");
+        btnEditScores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditScoresActionPerformed(evt);
+            }
+        });
 
         btnArchive.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnArchive.setText("Tổng kết");
@@ -60,7 +76,7 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
 
         lblSiSo.setText("Sĩ số:");
 
-        lblNamHoc.setText("Năm học");
+        lblNamHoc.setText(" ");
 
         spr2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -76,14 +92,12 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
         lblBulkName.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblBulkName.setText("{lblBulkName}");
 
-        lstSubjects.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lstSubjects.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        btnViewStudentList.setText("Danh sách học sinh");
+        btnViewStudentList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewStudentListActionPerformed(evt);
+            }
         });
-        lstSubjects.setLayoutOrientation(javax.swing.JList.VERTICAL_WRAP);
-        jScrollPane1.setViewportView(lstSubjects);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -105,14 +119,9 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblMonHoc)
-                                    .addComponent(lblKhoi, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblKhoi, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblBulkName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1)))
-                            .addComponent(txtMonHoc)
+                                .addComponent(lblBulkName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(spr, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -122,8 +131,11 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblClass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblStudentCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblSchoolYear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(lblSchoolYear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblStudentCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnViewStudentList)))))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -136,28 +148,21 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSiSo)
-                    .addComponent(lblStudentCount))
+                    .addComponent(lblStudentCount)
+                    .addComponent(btnViewStudentList))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNamHoc)
                     .addComponent(lblSchoolYear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(spr, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblKhoi)
                     .addComponent(lblBulkName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblMonHoc)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(txtMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spr, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnViewScores)
@@ -165,30 +170,49 @@ public class ClassSummeriseFrame extends javax.swing.JPanel {
                                 .addComponent(btnEditScores))
                             .addComponent(btnArchive, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(17, 17, 17))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(spr2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(spr2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEditScoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditScoresActionPerformed
+        // TODO add your handling code here:
+        MainScreen.setViewPort(new MarksViewFrame(clazz));
+    }//GEN-LAST:event_btnEditScoresActionPerformed
+
+    private void btnViewScoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewScoresActionPerformed
+        // TODO add your handling code here:
+        ClassViewFrame.selectTab(2);
+    }//GEN-LAST:event_btnViewScoresActionPerformed
+
+    private void btnViewStudentListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewStudentListActionPerformed
+        // TODO add your handling code here:
+        ClassViewFrame.selectTab(1);
+    }//GEN-LAST:event_btnViewStudentListActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnArchive;
     private javax.swing.JButton btnEditScores;
     private javax.swing.JButton btnViewScores;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton btnViewStudentList;
     private javax.swing.JLabel lblBulkName;
     private javax.swing.JLabel lblClass;
     private javax.swing.JLabel lblKhoi;
     private javax.swing.JLabel lblLop;
-    private javax.swing.JLabel lblMonHoc;
     private javax.swing.JLabel lblNamHoc;
     private javax.swing.JLabel lblSchoolYear;
     private javax.swing.JLabel lblSiSo;
     private javax.swing.JLabel lblStudentCount;
-    private javax.swing.JList<String> lstSubjects;
     private javax.swing.JSeparator spr;
     private javax.swing.JSeparator spr2;
-    private javax.swing.JSeparator txtMonHoc;
     // End of variables declaration//GEN-END:variables
+
+    private void initData() {
+        lblClass.setText(clazz.getName());
+        lblStudentCount.setText(WebMethods.getStudentsByClass(clazz).size() + "");
+        lblSchoolYear.setText(String.format("Học kì %s | Năm học %s",
+                Application.PROP.get("semester").toString(),
+                Application.PROP.get("school_year").toString()));
+        lblBulkName.setText(clazz.getBulkId().getName());
+    }
 }

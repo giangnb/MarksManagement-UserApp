@@ -7,6 +7,7 @@ package com.client.userapp.views;
 
 import com.client.userapp.Application;
 import com.client.userapp.constants.WebMethods;
+import com.client.userapp.constants.WindowUtility;
 import com.marksmana.info.Information;
 import com.marksmana.utils.Json;
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import static java.lang.System.exit;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.Callable;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -229,30 +231,12 @@ public class LoginScreen extends JFrame {
         lblErrors.setText("");
         disableForm();
 
-        // Validate
-        String user = txtUser.getText();
-        String pass = new String(txtPass.getPassword());
-        if (user.length() < 5 || pass.length() < 5) {
-            lblErrors.setText("Dữ liệu không hợp lệ");
-        } else {
-            // Authenticate
-            try {
-                Application.TEACHER = WebMethods.teacherLogin(user, pass);
-                if (Application.TEACHER != null) {
-                    JFrame frmMain = new MainScreen();
-                    saveUserToFile(user);
-                    this.setVisible(false);
-                    frmMain.setVisible(true);
-                }
-                lblErrors.setText("Sai thông tin");
-                txtPass.setText("");
-            } catch (Exception ex) {
-                lblErrors.setText("Lỗi đường truyền");
-            }
-        }
-
-        // Re-enable form
-        enableForm();
+        new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang xác thực...");
+            load.setVisible(true);
+            loginProcess();
+            load.dispose();
+        }).start();
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPassActionPerformed
@@ -379,5 +363,33 @@ public class LoginScreen extends JFrame {
         btnLogin.setEnabled(true);
         txtUser.setEnabled(true);
         txtPass.setEnabled(true);
+    }
+
+    private Callable loginProcess() {
+        // Validate
+        String user = txtUser.getText();
+        String pass = new String(txtPass.getPassword());
+        if (user.length() < 5 || pass.length() < 5) {
+            lblErrors.setText("Dữ liệu không hợp lệ");
+        } else {
+            // Authenticate
+            try {
+                Application.TEACHER = WebMethods.teacherLogin(user, pass);
+                if (Application.TEACHER != null) {
+                    JFrame frmMain = new MainScreen();
+                    saveUserToFile(user);
+                    this.setVisible(false);
+                    frmMain.setVisible(true);
+                }
+                lblErrors.setText("Sai thông tin");
+                txtPass.setText("");
+            } catch (Exception ex) {
+                lblErrors.setText("Lỗi đường truyền");
+            }
+        }
+
+        // Re-enable form
+        enableForm();
+        return null;
     }
 }

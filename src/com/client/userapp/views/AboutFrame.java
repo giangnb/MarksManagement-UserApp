@@ -21,6 +21,7 @@ public class AboutFrame extends javax.swing.JPanel {
         initComponents();
         
         initTable();
+        initAboutLabel();
     }
 
     /**
@@ -39,7 +40,7 @@ public class AboutFrame extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        lblAbout = new javax.swing.JLabel();
 
         lblInfoSchool.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblInfoSchool.setText("Thông tin trường học");
@@ -79,17 +80,12 @@ public class AboutFrame extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Thông tin phần mềm");
 
-        jScrollPane2.setBackground(new java.awt.Color(204, 204, 204));
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(240, 240, 240));
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTextArea1.setRows(1);
-        jTextArea1.setTabSize(4);
-        jTextArea1.setBorder(null);
-        jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane2.setViewportView(jTextArea1);
+        lblAbout.setText("{ctx}");
+        lblAbout.setToolTipText("");
+        lblAbout.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        lblAbout.setMaximumSize(new java.awt.Dimension(35, 14));
+        jScrollPane2.setViewportView(lblAbout);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -123,8 +119,8 @@ public class AboutFrame extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -135,7 +131,7 @@ public class AboutFrame extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel lblAbout;
     private javax.swing.JLabel lblInfoSchool;
     private javax.swing.JSeparator spr;
     private javax.swing.JTable tblSchoolInfo;
@@ -154,5 +150,15 @@ public class AboutFrame extends javax.swing.JPanel {
         } catch (Exception ex) {
             WindowUtility.showMessage(this, "Lỗi", "Không lấy được thông tin trường học.", WindowUtility.ERROR);
         }
+    }
+
+    private void initAboutLabel() {
+        StringBuilder ctx = new StringBuilder();
+        ctx.append("<html><body><h4>Phần mềm quản lý điểm</h4>")
+                .append("<quot>Phiên bản 1.0-GV</quot><hr/><p style=\"width: 90%; padding: 0 5px;\">")
+                .append("Phát triển bởi: <ul><li>Nguyễn Bằng Giang, </li><li>Phạm Xuân Đức,</li> <li>Lê Tiến Đạt,</li> <li>Ứng Đình Hướng,</li> <li>Nguyễn Phương Nam</li></ul>")
+                .append("Biểu tượng và đồ họa: Nick Roach (GPL License); Paomedia (Creative Common)");
+        ctx.append("</p></body></html>");
+        lblAbout.setText(ctx.toString());
     }
 }

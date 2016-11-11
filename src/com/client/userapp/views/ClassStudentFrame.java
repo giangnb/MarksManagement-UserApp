@@ -5,17 +5,41 @@
  */
 package com.client.userapp.views;
 
+import com.client.service.Clazz;
+import com.client.service.Student;
+import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
+import com.client.userapp.constants.WindowUtility;
+import com.marksmana.info.Information;
+import com.marksmana.info.SingleInformation;
+import com.marksmana.utils.Json;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author HuongUD
  */
 public class ClassStudentFrame extends javax.swing.JPanel {
 
+    private Clazz clazz;
+    private DefaultTableModel mStudent;
+    private JTable tblBackup = new JTable();
+
     /**
      * Creates new form ClassStudentFrame
+     *
+     * @param clazz
      */
-    public ClassStudentFrame() {
+    public ClassStudentFrame(Clazz clazz) {
+        this.clazz = clazz;
         initComponents();
+        initData();
+        btnChiTiet.setEnabled(false);
+        btnDungTimKiem.setVisible(false);
     }
 
     /**
@@ -33,19 +57,34 @@ public class ClassStudentFrame extends javax.swing.JPanel {
         btnDungTimKiem = new javax.swing.JButton();
         btnChiTiet = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblStudent = new javax.swing.JTable();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         jLabel1.setText("Tìm kiếm");
 
         btnTim.setText("Tìm");
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
 
         btnDungTimKiem.setText("Dừng tìm kiếm");
+        btnDungTimKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDungTimKiemActionPerformed(evt);
+            }
+        });
 
         btnChiTiet.setText("Chi tiết");
+        btnChiTiet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChiTietActionPerformed(evt);
+            }
+        });
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblStudent.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblStudent.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -56,18 +95,30 @@ public class ClassStudentFrame extends javax.swing.JPanel {
                 "MS", "Họ tên", "Địa chỉ", "Phụ huynh", "Điện thoại"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        tblStudent.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblStudent.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblStudent.getTableHeader().setReorderingAllowed(false);
+        tblStudent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblStudentMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblStudent);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -106,6 +157,79 @@ public class ClassStudentFrame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblStudentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblStudentMouseClicked
+        // TODO add your handling code here:
+        if (tblStudent.getSelectedRow() >= 0) {
+            btnChiTiet.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblStudentMouseClicked
+
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        // TODO add your handling code here:
+        if (txtTimKiem.getText().length() > 0) {
+            btnChiTiet.setEnabled(false);
+            initDataAsync();
+            String s = txtTimKiem.getText().toLowerCase();
+            for (int i = 0; i < tblStudent.getRowCount(); i++) {
+                if (!mStudent.getValueAt(i, 1).toString().toLowerCase().contains(s)) {
+                    mStudent.removeRow(i);
+                }
+            }
+        }
+        btnDungTimKiem.setVisible(true);
+    }//GEN-LAST:event_btnTimActionPerformed
+
+    private void btnDungTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDungTimKiemActionPerformed
+        // TODO add your handling code here:
+        btnChiTiet.setEnabled(false);
+        btnDungTimKiem.setVisible(false);
+        txtTimKiem.setText("");
+        initDataAsync();
+    }//GEN-LAST:event_btnDungTimKiemActionPerformed
+
+    private void btnChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietActionPerformed
+        // TODO add your handling code here:
+        int id = Integer.parseInt(mStudent.getValueAt(tblStudent.getSelectedRow(), 0).toString());
+        new Thread(() -> {
+            Student s = WebMethods.getStudentById(id);
+            StringBuilder sb = new StringBuilder("Thông tin học sinh - Mã số ");
+            sb.append(s.getId().toString())
+                    .append(":\n")
+                    .append("- Họ tên: ")
+                    .append(s.getName())
+                    .append("\n");
+            try {
+                Information i = Json.DeserializeObject(s.getInfo(), Information.class);
+                try {
+                    sb.append("\n- Ngày sinh: ")
+                            .append(Application.DATE_FORMAT.format(new Date(Long.parseLong(i.getValue("_dob")))));
+                } catch (Exception ex) {
+                }
+                sb.append("\n- Địa chỉ: ")
+                        .append(i.getValue("_addr"))
+                        .append("\n- Phụ huynh: ")
+                        .append(i.getValue("_parent"))
+                        .append("\n-Điện thoại: ")
+                        .append(i.getValue("_tel"))
+                        .append("\n");
+                for (SingleInformation si : i) {
+                    if (!si.getKey().matches("[_]+[a-zA-Z0-9]*")) {
+                        sb.append("\n- ")
+                                .append(si.getKey())
+                                .append(": ")
+                                .append(si.getValue());
+                    }
+                }
+            } catch (Exception ex) {
+                //ignore
+            }
+            WindowUtility.showMessage(this,
+                    "Thông tin học sinh - Lớp " + clazz.getName(),
+                    sb.toString(),
+                    WindowUtility.DEFAULT);
+        }).start();
+    }//GEN-LAST:event_btnChiTietActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChiTiet;
@@ -113,7 +237,62 @@ public class ClassStudentFrame extends javax.swing.JPanel {
     private javax.swing.JButton btnTim;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblStudent;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
+
+    private void initData() {
+        mStudent = (DefaultTableModel) tblStudent.getModel();
+        mStudent.setRowCount(0);
+        String addr, parent, tel;
+        for (Student s : WebMethods.getStudentsByClass(clazz)) {
+            addr = "";
+            parent = "";
+            tel = "";
+            try {
+                Information i = Json.DeserializeObject(s.getInfo(), Information.class);
+                addr = i.getValue("_addr");
+                parent = i.getValue("_parent");
+                tel = i.getValue("_tel");
+            } catch (Exception ex) {
+                // ignore
+            }
+            mStudent.addRow(new Object[]{
+                s.getId(),
+                s.getName(),
+                addr, parent, tel
+            });
+        }
+    }
+
+    private void initDataAsync() {
+        new Thread(() -> {
+            btnTim.setEnabled(false);
+            btnTim.setText("Xin chờ...");
+            mStudent = (DefaultTableModel) tblStudent.getModel();
+            mStudent.setRowCount(0);
+            String addr, parent, tel;
+            for (Student s : WebMethods.getStudentsByClass(clazz)) {
+                addr = "";
+                parent = "";
+                tel = "";
+                try {
+                    Information i = Json.DeserializeObject(s.getInfo(), Information.class);
+                    addr = i.getValue("_addr");
+                    parent = i.getValue("_parent");
+                    tel = i.getValue("_tel");
+                } catch (Exception ex) {
+                    // ignore
+                }
+                mStudent.addRow(new Object[]{
+                    s.getId(),
+                    s.getName(),
+                    addr, parent, tel
+                });
+            }
+            btnTim.setEnabled(true);
+            btnTim.setText("Tìm");
+        }).start();
+
+    }
 }
