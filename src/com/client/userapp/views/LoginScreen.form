@@ -173,7 +173,7 @@
           <Font name="Tahoma" size="12" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="QU&#x1ea2;N L&#xdd; &#x110;I&#x1ec2;M - D&#xe0;nh cho Gi&#xe1;o vi&#xea;n"/>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt;QU&#x1ea2;N L&#xdd; &#x110;I&#x1ec2;M - D&#xe0;nh cho &lt;b&gt;Gi&#xe1;o vi&#xea;n&lt;/b&gt;&lt;/html&gt;"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">

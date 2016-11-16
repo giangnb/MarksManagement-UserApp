@@ -101,17 +101,6 @@ public class WebMethods implements Serializable{
     }
 
     /**
-     * Get all scores of a subject
-     * @param subjectId
-     * @return Scores list
-     */
-    public static java.util.List<com.client.service.Score> getScoresBySubject(int subjectId) {
-        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
-        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
-        return port.getScoresBySubject(subjectId);
-    }
-
-    /**
      * Get all students
      * @return Students list
      */
@@ -307,5 +296,16 @@ public class WebMethods implements Serializable{
         com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
         com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
         return port.getClassesByTeacher(teacher);
+    }
+    
+    /**
+     * Get all scores of a subject
+     * @param subjectId
+     * @return Scores list
+     */
+    private static java.util.List<com.client.service.Score> getScoresBySubject(com.client.service.Subject subject) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.getScoresBySubject(subject);
     }
 }

@@ -73,7 +73,7 @@ public class LoginScreen extends JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("QUẢN LÝ ĐIỂM - Dành cho Giáo viên");
+        jLabel1.setText("<html>QUẢN LÝ ĐIỂM - Dành cho <b>Giáo viên</b></html>");
 
         lblSchoolName.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         lblSchoolName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -170,7 +170,7 @@ public class LoginScreen extends JFrame {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblSchoolName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1)
                             .addComponent(lblInformation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jSeparator2)))
                     .addGroup(layout.createSequentialGroup()
@@ -192,7 +192,7 @@ public class LoginScreen extends JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -333,7 +333,7 @@ public class LoginScreen extends JFrame {
         try {
             lblSchoolName.setText(Application.PROP.get("school_name").toString());
             lblInformation.setText(
-                    String.format("Học kì %s - Năm học %s", 
+                    String.format("<html>Học kì <b>%s</b> - Năm học <b>%s</b></html>", 
                             Application.PROP.get("semester"),
                             Application.PROP.get("school_year")));
             if (Application.PROP.get("app_status").toString().trim().equals("0")) {
