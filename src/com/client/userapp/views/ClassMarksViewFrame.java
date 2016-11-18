@@ -160,15 +160,18 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         // TODO add your handling code here:
         new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
             btnFind.setEnabled(false);
             btnFind.setText("...");
             mTblScore.setRowCount(0);
 
             List<StudentDTO> student = StudentDTO.getStudentDTOList(WebMethods.getStudentsByClass(clazz));
-            String[] marks = new String[maxCo];
+            String[] marks;
             ArrayList<String> ctx;
             List<Score> score;
             for (StudentDTO s : student) {
+                marks = new String[maxCo];
                 ctx = new ArrayList<>();
                 ctx.add(s.getId() + "");
                 ctx.add(s.getName());
@@ -191,6 +194,7 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
                 btnFind.setEnabled(true);
                 btnFind.setText("Tìm");
             }
+            load.dispose();
         }).start();
     }//GEN-LAST:event_btnFindActionPerformed
 

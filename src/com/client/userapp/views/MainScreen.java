@@ -12,17 +12,20 @@ import com.client.userapp.Application;
 import com.client.userapp.constants.ConfirmOption;
 import com.client.userapp.constants.WebMethods;
 import com.client.userapp.constants.WindowUtility;
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -40,6 +43,7 @@ public class MainScreen extends javax.swing.JFrame {
         setSize(WindowSize.WIDE_WINDOW.getDimension());
         setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
         setLocationRelativeTo(null);
+        setViewPort(new WelcomeFrame());
     }
 
     /**
@@ -145,6 +149,11 @@ public class MainScreen extends javax.swing.JFrame {
 
         mniUserManual.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/userapp/images/howto.png"))); // NOI18N
         mniUserManual.setText("Hướng dẫn sử dụng");
+        mniUserManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniUserManualActionPerformed(evt);
+            }
+        });
         jMenu3.add(mniUserManual);
 
         mniSupport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/userapp/images/recover.png"))); // NOI18N
@@ -229,6 +238,26 @@ public class MainScreen extends javax.swing.JFrame {
             setViewPort(new MarksViewFrame());
         }).start();
     }//GEN-LAST:event_mniAddScoresActionPerformed
+
+    private void mniUserManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUserManualActionPerformed
+        // TODO add your handling code here:
+        String content="";
+        File f = new File("UserManual.html");
+        try {
+            content = new String(Files.readAllBytes(f.toPath()));
+        } catch (IOException ex) {
+            // ignore
+        }
+        
+        JDialog dia = new JDialog(this, "Hướng dẫn sử dụng", true);
+        JLabel lblHelp = new JLabel(content);
+        JScrollPane scrHelp = new JScrollPane(lblHelp);
+        dia.setLayout(new CardLayout());
+        dia.getContentPane().add(scrHelp);
+        dia.setSize(WindowSize.SMALL_WINDOW.getDimension());
+        dia.setLocationRelativeTo(this);
+        dia.setVisible(true);
+    }//GEN-LAST:event_mniUserManualActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;

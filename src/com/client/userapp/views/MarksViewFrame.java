@@ -219,10 +219,11 @@ public class MarksViewFrame extends javax.swing.JPanel {
             load.setVisible(true);
             
             student = StudentDTO.getStudentDTOList(WebMethods.getStudentsByClass(cla));
-            String[] marks = new String[maxCo];
+            String[] marks;
             ArrayList<String> ctx;
             List<Score> score;
             for (StudentDTO s : student) {
+                marks = new String[maxCo];
                 ctx = new ArrayList<>();
                 ctx.add(s.getName());
                 
@@ -234,7 +235,9 @@ public class MarksViewFrame extends javax.swing.JPanel {
                     marks[sc.getCoefficient()-1] += sc.getScore()+" ; ";
                 }
                 for (String m : marks) {
-                    ctx.add(m.substring(4, m.length()-2));
+                    if (m!=null) {
+                        ctx.add(m.substring(4, m.length()-2));
+                    }
                 }
                 mMarks.addRow(ctx.toArray());
             }

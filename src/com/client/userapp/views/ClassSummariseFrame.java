@@ -11,6 +11,7 @@ import com.client.service.Subject;
 import com.client.userapp.Application;
 import com.client.userapp.constants.WebMethods;
 import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
 
 /**
  *
@@ -52,6 +53,9 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
         lblSchoolYear = new javax.swing.JLabel();
         lblBulkName = new javax.swing.JLabel();
         btnViewStudentList = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstSubjects = new javax.swing.JList<>();
 
         lblKhoi.setText("Khối:");
 
@@ -99,6 +103,15 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Các môn học:");
+
+        lstSubjects.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lstSubjects);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -136,6 +149,11 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
                                         .addComponent(lblStudentCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btnViewStudentList)))))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -154,13 +172,17 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNamHoc)
                     .addComponent(lblSchoolYear))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(1, 1, 1)
+                .addComponent(spr, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblKhoi)
                     .addComponent(lblBulkName))
-                .addGap(18, 18, 18)
-                .addComponent(spr, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -195,6 +217,8 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
     private javax.swing.JButton btnEditScores;
     private javax.swing.JButton btnViewScores;
     private javax.swing.JButton btnViewStudentList;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBulkName;
     private javax.swing.JLabel lblClass;
     private javax.swing.JLabel lblKhoi;
@@ -203,6 +227,7 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
     private javax.swing.JLabel lblSchoolYear;
     private javax.swing.JLabel lblSiSo;
     private javax.swing.JLabel lblStudentCount;
+    private javax.swing.JList<String> lstSubjects;
     private javax.swing.JSeparator spr;
     private javax.swing.JSeparator spr2;
     // End of variables declaration//GEN-END:variables
@@ -214,5 +239,15 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
                 Application.PROP.get("semester").toString(),
                 Application.PROP.get("school_year").toString()));
         lblBulkName.setText(clazz.getBulkId().getName());
+        DefaultListModel<String> model = new DefaultListModel<>();
+        lstSubjects.setModel(model);
+        Bulk b = WebMethods.getBulkById(clazz.getBulkId().getId());
+        if (b.getSubjectList().size()<=0) {
+            model.addElement("--không có môn học--");
+            return;
+        }
+        for (Subject s : b.getSubjectList()) {
+            model.addElement(s.getName());
+        }
     }
 }
