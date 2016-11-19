@@ -320,6 +320,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
             lblStudentName.setText(current.getName());
             lblStudetnId.setText(current.getId() + "");
             txtRemark.setEditable(true);
+            txtRemark.setText("");
             btnSubmit.setEnabled(false);
             btnUpdate.setEnabled(false);
             initScores();
@@ -344,10 +345,14 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
             btnSubmit.setEnabled(false);
             LoadingScreen load = new LoadingScreen("Đang tải...");
             load.setVisible(true);
-            WebMethods.archiveToLogByStudent(current.getId(), 
+            int result = WebMethods.archiveToLogByStudent(current.getId(), 
                     remark+"<hr/>Giáo viên chủ nhiệm<br/><b>"+Application.TEACHER.getName()+"</b>");
             load.dispose();
+            if (result == 0) {
+                WindowUtility.showMessage(this, "Lỗi tổng kết điểm", "Tổng kết điểm thất bại.\nHãy thử lại.", WindowUtility.WARNING);
+            }
             btnSubmit.setEnabled(true);
+            btnNext.doClick();
         }).start();
     }//GEN-LAST:event_btnSubmitActionPerformed
 
