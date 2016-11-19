@@ -300,12 +300,30 @@ public class WebMethods implements Serializable{
     
     /**
      * Get all scores of a subject
-     * @param subjectId
+     * @param subject
      * @return Scores list
      */
-    private static java.util.List<com.client.service.Score> getScoresBySubject(com.client.service.Subject subject) {
+    public static java.util.List<com.client.service.Score> getScoresBySubject(com.client.service.Subject subject) {
         com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
         com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
         return port.getScoresBySubject(subject);
+    }
+
+    public static int removeScore(java.lang.Long scoreId) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.removeScore(scoreId);
+    }
+
+    public static java.util.List<com.client.service.Score> removeScores(java.util.List<java.lang.Long> ids) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.removeScores(ids);
+    }
+
+    public static java.util.List<com.client.service.Score> getScoresByStudent(com.client.service.Student student) {
+        com.client.service.ApplicationWebService_Service service = new com.client.service.ApplicationWebService_Service();
+        com.client.service.ApplicationWebService port = service.getApplicationWebServicePort();
+        return port.getScoresByStudent(student);
     }
 }
