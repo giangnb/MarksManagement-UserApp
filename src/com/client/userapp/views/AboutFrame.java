@@ -155,7 +155,7 @@ public class AboutFrame extends javax.swing.JPanel {
     private void initAboutLabel() {
         StringBuilder ctx = new StringBuilder();
         ctx.append("<html><body><h4>Phần mềm quản lý điểm</h4>")
-                .append("<quot>Phiên bản 1.0-GV</quot><hr/><p style=\"width: 90%; padding: 0 5px;\">")
+                .append("<quot>Phiên bản 1.0-U</quot><hr/><p style=\"width: 90%; padding: 0 5px;\">")
                 .append("Phát triển bởi: <ul><li>Nguyễn Bằng Giang, </li><li>Phạm Xuân Đức,</li> <li>Lê Tiến Đạt,</li> <li>Ứng Đình Hướng,</li> <li>Nguyễn Phương Nam</li></ul>")
                 .append("Biểu tượng và đồ họa: Nick Roach (GPL License); Paomedia (Creative Common)");
         ctx.append("</p></body></html>");

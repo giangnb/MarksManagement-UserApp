@@ -23,8 +23,18 @@
  */
 package com.client.userapp.views;
 
+import com.client.service.Clazz;
+import com.client.service.Score;
+import com.client.service.Student;
 import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
 import com.client.userapp.constants.WindowSize;
+import com.client.userapp.constants.WindowUtility;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -32,11 +42,26 @@ import com.client.userapp.constants.WindowSize;
  */
 public class ScoreArchiveScreen extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ScoreArchiveScreen
-     */
-    public ScoreArchiveScreen() {
+    private Clazz clazz;
+    private Student current;
+    private List<Student> students;
+    private List<Score> scores;
+    private DefaultTableModel mScores;
+    private DefaultListModel<String> mStudents;
+
+    public ScoreArchiveScreen(Clazz clazz) {
+        this.clazz = clazz;
+
         initComponents();
+        btnSubmit.setEnabled(false);
+        btnUpdate.setEnabled(false);
+        lblClassName.setText("<html>Lớp <b><i>" + clazz.getName().replace("<", "&lt;").replace(">", "&gt;") + "</i></b></html>");
+        mScores = (DefaultTableModel) tblScores.getModel();
+        btnSubmit.setVisible(true);
+        btnUpdate.setVisible(false);
+        initStudents();
+
+        setTitle(getTitle() + " - Lớp " + clazz.getName());
         setIconImage(Application.ICON);
         setSize(WindowSize.LARGE_WINDOW.getDimension());
         setMinimumSize(WindowSize.SMALL_WINDOW.getDimension());
@@ -57,7 +82,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lstStudents = new javax.swing.JList<>();
         btnPrev = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lblStudentName = new javax.swing.JLabel();
@@ -71,11 +96,10 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtRemark = new javax.swing.JTextArea();
         btnSubmit = new javax.swing.JButton();
-        tblUpdate = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblClassName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblClassName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblClassName.setText("{lblClassName}");
 
@@ -88,11 +112,26 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         lstStudents.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstStudents.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstStudentsValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(lstStudents);
 
         btnPrev.setText("<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText(">");
+        btnNext.setText(">");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -101,15 +140,15 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
         jLabel2.setText("Họ tên:");
 
         lblStudentName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblStudentName.setText("{lblStudentName}");
+        lblStudentName.setText("----");
 
         jLabel4.setText("Mã số:");
 
         lblStudetnId.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblStudetnId.setText("{lblStudentId}");
+        lblStudetnId.setText("----");
 
-        lblAvgScore.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblAvgScore.setText("{lblAvgScore}");
+        lblAvgScore.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblAvgScore.setText("----");
 
         jLabel7.setText("Điểm trung bình:");
 
@@ -141,6 +180,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
             }
         });
         tblScores.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblScores.setEnabled(false);
         tblScores.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblScores.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblScores);
@@ -148,15 +188,31 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         jLabel3.setText("Nhận xét");
 
+        txtRemark.setEditable(false);
         txtRemark.setColumns(20);
         txtRemark.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         txtRemark.setRows(5);
+        txtRemark.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRemarkKeyTyped(evt);
+            }
+        });
         jScrollPane3.setViewportView(txtRemark);
 
         btnSubmit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnSubmit.setText("Tổng kết");
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubmitActionPerformed(evt);
+            }
+        });
 
-        tblUpdate.setText("Cập nhật");
+        btnUpdate.setText("Cập nhật");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -167,7 +223,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnPrev, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
+                        .addComponent(btnNext, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
                     .addComponent(lblClassName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -195,7 +251,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnSubmit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tblUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -206,12 +262,12 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblClassName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnPrev)
-                            .addComponent(jButton2)))
+                            .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -225,7 +281,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(lblAvgScore))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,16 +290,90 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tblUpdate))))))
+                                .addComponent(btnUpdate))))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        if (lstStudents.getSelectedIndex() > 0) {
+            lstStudents.setSelectedIndex(lstStudents.getSelectedIndex() - 1);
+        }
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        if (lstStudents.getSelectedIndex() < (students.size() - 1)) {
+            lstStudents.setSelectedIndex(lstStudents.getSelectedIndex() + 1);
+        }
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void lstStudentsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStudentsValueChanged
+        // TODO add your handling code here:
+        if (lstStudents.getSelectedIndex() < 0 || lstStudents.getSelectedIndex() >= students.size()) {
+            return;
+        }
+        if (lstStudents.getValueIsAdjusting()) {
+            current = students.get(lstStudents.getSelectedIndex());
+            lblStudentName.setText(current.getName());
+            lblStudetnId.setText(current.getId() + "");
+            txtRemark.setEditable(true);
+            btnSubmit.setEnabled(false);
+            btnUpdate.setEnabled(false);
+            initScores();
+        }
+    }//GEN-LAST:event_lstStudentsValueChanged
+
+    private void txtRemarkKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRemarkKeyTyped
+        // TODO add your handling code here:
+        if (txtRemark.getText().length()>0) {
+            btnSubmit.setEnabled(true);
+            btnUpdate.setEnabled(true);
+        }
+    }//GEN-LAST:event_txtRemarkKeyTyped
+
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        // TODO add your handling code here:
+        String remark = txtRemark.getText()
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\n", "<br/>");
+        new Thread(()->{
+            btnSubmit.setEnabled(false);
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            WebMethods.archiveToLogByStudent(current.getId(), 
+                    remark+"<hr/>Giáo viên chủ nhiệm<br/><b>"+Application.TEACHER.getName()+"</b>");
+            load.dispose();
+            btnSubmit.setEnabled(true);
+        }).start();
+    }//GEN-LAST:event_btnSubmitActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        String remark = txtRemark.getText()
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\n", "<br/>")
+                + "<hr/>Giáo viên chủ nhiệm<br/><b>"
+                + Application.TEACHER.getName() + "</b>";
+        new Thread(()->{
+            btnUpdate.setEnabled(false);
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            WebMethods.editArchiveRemark(current.getId(), remark);
+            load.dispose();
+            btnUpdate.setEnabled(true);
+        }).start();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrev;
     private javax.swing.JButton btnSubmit;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -259,7 +389,102 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lblStudetnId;
     private javax.swing.JList<String> lstStudents;
     private javax.swing.JTable tblScores;
-    private javax.swing.JButton tblUpdate;
     private javax.swing.JTextArea txtRemark;
     // End of variables declaration//GEN-END:variables
+
+    private void initStudents() {
+        mStudents = new DefaultListModel<>();
+        lstStudents.setModel(mStudents);
+        mStudents.removeAllElements();
+        new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            students = WebMethods.getStudentsByClass(clazz);
+            for (Student s : students) {
+                mStudents.addElement(s.getName());
+            }
+            load.dispose();
+        }).start();
+    }
+
+    private void initScores() {
+        mScores.setRowCount(0);
+        scores = new ArrayList<>();
+        new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            // load score by student
+            scores = WebMethods.getScoresByStudent(current);
+            if (scores.size()<=0) {
+                // nothing left
+                load.dispose();
+                WindowUtility.showMessage(this, "Thông báo", "Học sinh đã được tổng kết điểm hoặc chưa có đầu điểm nào mới.\nBạn chỉ có thể sửa Nhận xét của lần tổng kết điểm gần nhất học sinh.", WindowUtility.WARNING);
+                btnSubmit.setVisible(false);
+                btnUpdate.setVisible(true);
+                return;
+            }
+            Hashtable<String, String[]> data = new Hashtable<>();
+            for (Score s : scores) {
+                // Dear God of Coders, I'm really sorry! boo-hoo :(
+                String[] d;
+                if (data.get(s.getSubjectId().getName()) != null) {
+                    d = data.get(s.getSubjectId().getName());
+                } else {
+                    d = new String[Integer.parseInt(Application.PROP.get("max_coeff").toString())];
+                }
+                if (d[s.getCoefficient() - 1] == null) {
+                    d[s.getCoefficient() - 1] = "";
+                }
+                d[s.getCoefficient() - 1] += d[s.getCoefficient() - 1] + s.getScore() + " ; ";
+                data.put(s.getSubjectId().getName(), d);
+            }
+            // load scores to table
+            double avgTotal = 0;
+            double subTotal;
+            int coeffTotal;
+            for (String key : data.keySet()) {
+                // Init for avg calcuating
+                subTotal = 0;
+                coeffTotal = 0;
+                // Table row process
+                String[] val = data.get(key);
+                // Init context for table's row
+                String[] ctx = new String[val.length + 2];
+                for (String string : ctx) {
+                    string = "";
+                }
+                ctx[0] = key;
+                for (int i = 0; i < val.length; i++) {
+                    if (val[i] != null) {
+                        ctx[i + 1] = val[i].substring(0, val[i].length() - 3);
+                        String[] scoreVal = val[i].split(" ; ");
+                        // counting for avg
+                        for (String score : scoreVal) {
+                            if (score.equals("")) continue;
+                            try {
+                                subTotal += Double.parseDouble(score) * (i+1);
+                                coeffTotal += i + 1;
+                            } catch (NumberFormatException ex) {
+                                // ignore
+                            }
+                        }
+                    } else {
+                        ctx[i + 1] = "";
+                    }
+                }
+                if (coeffTotal != 0) {
+                    avgTotal += ((double) subTotal / (double) coeffTotal);
+                    ctx[ctx.length - 1] = ((double) subTotal / (double) coeffTotal) + "";
+                } else {
+                    ctx[ctx.length - 1] = "0";
+                }
+                // add row (finally!)
+                mScores.addRow(ctx);
+            }
+            lblAvgScore.setText(avgTotal / data.size() + "");
+            load.dispose();
+            btnSubmit.setVisible(true);
+            btnUpdate.setVisible(false);
+        }).start();
+    }
 }

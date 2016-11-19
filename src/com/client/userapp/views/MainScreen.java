@@ -88,7 +88,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         mniAddScores.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mniAddScores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/userapp/images/marking.png"))); // NOI18N
-        mniAddScores.setText("Nhập điểm");
+        mniAddScores.setText("Xem điểm");
         mniAddScores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniAddScoresActionPerformed(evt);

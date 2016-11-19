@@ -168,15 +168,25 @@ public class ClassStudentFrame extends javax.swing.JPanel {
         // TODO add your handling code here:
         if (txtTimKiem.getText().length() > 0) {
             btnChiTiet.setEnabled(false);
-            initDataAsync();
-            String s = txtTimKiem.getText().toLowerCase();
-            for (int i = 0; i < tblStudent.getRowCount(); i++) {
-                if (!mStudent.getValueAt(i, 1).toString().toLowerCase().contains(s)) {
-                    mStudent.removeRow(i);
+            btnTim.setEnabled(false);
+            btnTim.setText("Xin chờ...");
+            new Thread(() -> {
+                initData();
+                String s = txtTimKiem.getText().toLowerCase();
+                for (int i = 0; i < tblStudent.getRowCount(); i++) {
+                    if (!mStudent.getValueAt(i, 1).toString().toLowerCase().contains(s)) {
+                        mStudent.removeRow(i);
+                    }
                 }
+            }).start();
+            btnTim.setEnabled(true);
+            btnTim.setText("Tìm");
+            btnDungTimKiem.setVisible(true);
+        } else {
+            if (btnDungTimKiem.isVisible()) {
+                initDataAsync();
             }
         }
-        btnDungTimKiem.setVisible(true);
     }//GEN-LAST:event_btnTimActionPerformed
 
     private void btnDungTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDungTimKiemActionPerformed

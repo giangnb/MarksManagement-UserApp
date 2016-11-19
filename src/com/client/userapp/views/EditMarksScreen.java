@@ -1,47 +1,61 @@
 package com.client.userapp.views;
 
+import com.client.service.Score;
 import com.client.userapp.constants.WindowSize;
 import com.client.service.Student;
 import com.client.service.Subject;
+import com.client.userapp.Application;
+import com.client.userapp.constants.ConfirmOption;
+import com.client.userapp.constants.WebMethods;
+import com.client.userapp.constants.WindowUtility;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author pxduc
  */
 public class EditMarksScreen extends javax.swing.JFrame {
+
     private Student student;
     private Subject subject;
+    private List<Score> scores;
+    private DefaultTableModel mMark;
 
-    /**
-     * Creates new form EditMarksScreen
-     */
-    public EditMarksScreen(Student student) {
+    public EditMarksScreen(Student student, Subject subject) {
         this.student = student;
-        //this.subject = subject
-        
+        this.subject = subject;
+
         initComponents();
-        
-        if (student==null) {
+
+        mMark = (DefaultTableModel) tblMark.getModel();
+        mMark.setRowCount(0);
+
+        lblSubjectName.setText(subject.getName());
+        if (student == null) {
             lblName.setVisible(false);
             lblId.setText("<Hãy chọn học sinh>");
         } else {
             cboStudent.setVisible(false);
-            lblId.setText(student.getId()+"");
+            lblName.setText(student.getName());
+            lblId.setText(student.getId() + "");
+            initData();
         }
-        
+
         setSize(WindowSize.NORMAL_WINDOW.getDimension());
         setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
+        setIconImage(Application.ICON);
     }
-    
+
     public EditMarksScreen() {
         initComponents();
-        
+
         lblId.setText("<Hãy chọn học sinh>");
         lblName.setVisible(false);
     }
@@ -77,26 +91,38 @@ public class EditMarksScreen extends javax.swing.JFrame {
         jLabel2.setText("Mã số:");
 
         btnDelete.setText("Xóa");
+        btnDelete.setEnabled(false);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnChangeMark.setText("Sửa điểm");
+        btnChangeMark.setEnabled(false);
+        btnChangeMark.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangeMarkActionPerformed(evt);
+            }
+        });
 
         tblMark.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblMark.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "STT", "Hệ số", "Điểm"
+                "STT", "Hệ số", "Điểm", "Người chấm"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -110,6 +136,11 @@ public class EditMarksScreen extends javax.swing.JFrame {
         tblMark.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tblMark.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblMark.getTableHeader().setReorderingAllowed(false);
+        tblMark.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMarkMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblMark);
 
         lblName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -124,6 +155,11 @@ public class EditMarksScreen extends javax.swing.JFrame {
         lblSubjectName.setText("{subject.name}");
 
         btnAdd.setText("Thêm điểm");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         cboStudent.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -137,20 +173,20 @@ public class EditMarksScreen extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cboStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(29, 29, 29))
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblSubjectName, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 10, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cboStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(lblSubjectName, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,6 +237,52 @@ public class EditMarksScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblMarkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMarkMouseClicked
+        // TODO add your handling code here:
+        if (tblMark.getSelectedRow() >= 0) {
+            btnChangeMark.setEnabled(true);
+            btnDelete.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblMarkMouseClicked
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        ConfirmOption conf = WindowUtility.showConfirm(this, "Xóa điểm", "Việc xóa điểm sẽ không thể hoàn tác.\nBạn có thực sự muốn xóa?");
+        if (conf.equals(ConfirmOption.YES)) {
+            new Thread(() -> {
+                btnDelete.setText("...");
+                btnDelete.setEnabled(false);
+                Long id = scores.get(tblMark.getSelectedRow()).getId();
+                WebMethods.removeScore(id);
+                btnDelete.setText("Xóa");
+                initData();
+            }).start();
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnChangeMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeMarkActionPerformed
+        // TODO add your handling code here:
+        Score selected = inputScore(scores.get(tblMark.getSelectedRow()));
+        if (selected==null) return;
+        // Manipulation
+        List<Score> list = new ArrayList<>();
+        list.add(selected);
+        WebMethods.updateScores(list);
+        initData();
+    }//GEN-LAST:event_btnChangeMarkActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        Score sc = inputScore(new Score());
+        if (sc==null) return;
+        sc.setStudentId(student);
+        sc.setSubjectId(subject);
+        sc.setTeacherId(Application.TEACHER);
+        // Manipulation
+        WebMethods.addScore(sc);
+        initData();
+    }//GEN-LAST:event_btnAddActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnChangeMark;
@@ -216,4 +298,52 @@ public class EditMarksScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lblSubjectName;
     private javax.swing.JTable tblMark;
     // End of variables declaration//GEN-END:variables
+
+    private void initData() {
+        btnChangeMark.setEnabled(false);
+        btnDelete.setEnabled(false);
+        scores = new ArrayList<>();
+        mMark.setRowCount(0);
+        new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            setEnabled(false);
+            scores = WebMethods.getScoresByStudentAndSubject(student, subject);
+            int count = 1;
+            for (Score s : scores) {
+                mMark.addRow(new Object[]{count, s.getCoefficient(), s.getScore(), s.getTeacherId().getName()});
+                count++;
+            }
+            setEnabled(true);
+            load.dispose();
+        }).start();
+    }
+
+    private Score inputScore(Score s) {
+        Score selected = s;
+        // Get coeff
+        String input = WindowUtility.showInputPrompt(this, "Sửa điểm", "Nhập hệ số điểm:");
+        if (input==null) return null;
+        if (!input.matches("[0-9]+")) {
+            WindowUtility.showMessage(this, "Sửa điểm", "Hệ số không hợp lệ", WindowUtility.WARNING);
+            return null;
+        }
+        int coeff = Integer.parseInt(input);
+        if (coeff > Integer.parseInt(Application.PROP.get("max_coeff").toString())
+                || coeff < Integer.parseInt(Application.PROP.get("min_coeff").toString())) {
+            WindowUtility.showMessage(this, "Sửa điểm", "Hệ số nằm ngoài khoảng cho phép", WindowUtility.WARNING);
+            return null;
+        }
+        selected.setCoefficient(Short.parseShort(input));
+        // Get score
+        input = WindowUtility.showInputPrompt(this, "Sửa điểm", "Nhập điểm:");
+        if (input==null) return null;
+        input = input.replace(",", ".");
+        if (!input.matches("[0-9]+([.][0-9]+)?")) {
+            WindowUtility.showMessage(this, "Sửa điểm", "Điểm số không hợp lệ", WindowUtility.WARNING);
+            return null;
+        }
+        selected.setScore(Double.parseDouble(input));
+        return selected;
+    }
 }

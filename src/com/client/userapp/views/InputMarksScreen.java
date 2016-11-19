@@ -6,10 +6,17 @@
 package com.client.userapp.views;
 
 import com.client.service.Clazz;
+import com.client.service.Score;
 import com.client.service.Subject;
 import com.client.userapp.Application;
+import com.client.userapp.constants.WebMethods;
 import com.client.userapp.constants.WindowSize;
+import com.client.userapp.constants.WindowUtility;
+import com.client.userapp.dto.StudentDTO;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,21 +26,40 @@ public class InputMarksScreen extends javax.swing.JFrame {
 
     private Subject subject;
     private Clazz clazz;
-    
-    /**
-     * Creates new form InputMarksScreen
-     */
-    public InputMarksScreen(Subject subject, Clazz clazz) {
+    private java.util.List<StudentDTO> students;
+    private DefaultTableModel mScore;
+
+    public InputMarksScreen(Subject subject, Clazz clazz, java.util.List<StudentDTO> students) {
         this.subject = subject;
         this.clazz = clazz;
-        
+        this.students = students;
+
         initComponents();
-        
-        initData();
-        
+        mScore = (DefaultTableModel) tblScore.getModel();
+        lblClazz.setText(clazz.getName());
+        lblSubject.setText(subject.getName());
+
         setSize(WindowSize.NARROW_WINDOW.getDimension());
         setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
         setTitle(String.format("Nhập điểm môn %s - Lớp %s", subject.getName(), clazz.getName()));
+
+        initData();
+    }
+
+    public InputMarksScreen(Subject subject, Clazz clazz) {
+        this.subject = subject;
+        this.clazz = clazz;
+
+        initComponents();
+        mScore = (DefaultTableModel) tblScore.getModel();
+        lblClazz.setText(clazz.getName());
+        lblSubject.setText(subject.getName());
+
+        setSize(WindowSize.NARROW_WINDOW.getDimension());
+        setMinimumSize(WindowSize.TINY_WINDOW.getDimension());
+        setTitle(String.format("Nhập điểm môn %s - Lớp %s", subject.getName(), clazz.getName()));
+
+        initStudents();
     }
 
     /**
@@ -50,10 +76,9 @@ public class InputMarksScreen extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtCoefficient = new javax.swing.JSpinner();
         jSeparator1 = new javax.swing.JSeparator();
-        btnStart = new javax.swing.JButton();
         btnComplete = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblScore = new javax.swing.JTable();
         lblSubject = new javax.swing.JLabel();
         lblClazz = new javax.swing.JLabel();
 
@@ -68,28 +93,31 @@ public class InputMarksScreen extends javax.swing.JFrame {
 
         txtCoefficient.setModel(new javax.swing.SpinnerNumberModel(1, null, null, 1));
 
-        btnStart.setText("Bắt đầu");
-
         btnComplete.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnComplete.setText("Hoàn thành");
+        btnComplete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompleteActionPerformed(evt);
+            }
+        });
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblScore.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblScore.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Họ tên", "Điểm"
+                "MS", "Họ tên", "Điểm"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true
+                false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -100,9 +128,9 @@ public class InputMarksScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        tblScore.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblScore.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblScore);
 
         lblSubject.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblSubject.setText("{subject.name}");
@@ -129,8 +157,6 @@ public class InputMarksScreen extends javax.swing.JFrame {
                             .addComponent(lblSubject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblClazz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnStart)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnComplete))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
                 .addContainerGap())
@@ -150,9 +176,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3)
                     .addComponent(txtCoefficient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnStart)
-                        .addComponent(btnComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -165,24 +189,106 @@ public class InputMarksScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCompleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteActionPerformed
+        // TODO add your handling code here:
+        if (tblScore.getSelectedRow()>=0 && tblScore.getSelectedColumn()>=0) {
+            tblScore.getCellEditor(tblScore.getSelectedRow(), tblScore.getSelectedColumn()).stopCellEditing();
+        }
+        int ch = -1;
+        ch = WindowUtility.showConfirm(this, "Nhập điểm",
+                "Những điểm bị bỏ trống hoặc không hợp lệ trong danh sách sẽ bị bỏ qua và\n không được nhập vào bảng điểm.\nQua trình xử lý sẽ mất khoảng 1-2 phút.",
+                new String[]{"Tôi đã nhập điểm xong", "Tiếp tục nhập điểm"});
+        if (ch == 0) {
+            java.util.List<Score> scores = new ArrayList<>();
+            Score sc;
+            double val;
+            int invalids = 0;
+            for (int i = 0; i < mScore.getRowCount(); i++) {
+                sc = new Score();
+                try {
+                    sc.setStudentId(students.get(i).toStudent());
+                    sc.setSubjectId(subject);
+                    sc.setTeacherId(Application.TEACHER);
+                    sc.setCoefficient(Short.parseShort(txtCoefficient.getValue().toString()));
+                    val = Double.parseDouble(mScore.getValueAt(i, 2).toString().replace(",", "."));
+                    sc.setScore(val);
+                } catch (NumberFormatException ex) {
+                    invalids++;
+                    continue;
+                }
+                scores.add(sc);
+                mScore.removeRow(i);
+            }
+            final int sendCount = scores.size();
+            final int invalidCount = invalids;
+            new Thread(() -> {
+                LoadingScreen load = new LoadingScreen("Đang tải...");
+                load.setVisible(true);
+                List<Score> errors = WebMethods.addScores(scores);
+                int errorCount = errors.size();
+                initData(errors);
+                load.dispose();
+                StringBuilder sb = new StringBuilder("Nhận điểm hoàn tất\n\n - Số điểm không hợp lệ: ");
+                sb.append(invalidCount)
+                        .append("\n - Số điểm được xử lý: ")
+                        .append(sendCount)
+                        .append("\n - Số điểm xử lý lỗi: ")
+                        .append(errorCount)
+                        .append("\n\nCác điểm không hợp lệ và lỗi được giữ lại và hiển thị trong bảng.");
+                WindowUtility.showMessage(this, "Nhập điểm", sb.toString(), WindowUtility.DEFAULT);
+            }).start();
+        }
+    }//GEN-LAST:event_btnCompleteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnComplete;
-    private javax.swing.JButton btnStart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblClazz;
     private javax.swing.JLabel lblSubject;
+    private javax.swing.JTable tblScore;
     private javax.swing.JSpinner txtCoefficient;
     // End of variables declaration//GEN-END:variables
 
     private void initData() {
         SpinnerNumberModel model = (SpinnerNumberModel) txtCoefficient.getModel();
-        model.setMinimum(1);
+        model.setMinimum(Integer.parseInt(Application.PROP.get("min_coeff").toString()));
         model.setMaximum(Integer.parseInt(Application.PROP.get("max_coeff").toString()));
-        txtCoefficient.setValue(1);
+        txtCoefficient.setValue(Integer.parseInt(Application.PROP.get("min_coeff").toString()));
+        mScore.setRowCount(0);
+        new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            for (StudentDTO s : students) {
+                mScore.addRow(new Object[]{s.getId(), s.getName(), ""});
+            }
+            load.dispose();
+        }).start();
+    }
+
+    private void initData(java.util.List<Score> scores) {
+        for (Score s : scores) {
+            mScore.addRow(new Object[]{s.getId(), s.getStudentId().getName(), s.getScore()});
+        }
+    }
+
+    private void initStudents() {
+        SpinnerNumberModel model = (SpinnerNumberModel) txtCoefficient.getModel();
+        model.setMinimum(Integer.parseInt(Application.PROP.get("min_coeff").toString()));
+        model.setMaximum(Integer.parseInt(Application.PROP.get("max_coeff").toString()));
+        txtCoefficient.setValue(Integer.parseInt(Application.PROP.get("min_coeff").toString()));
+        mScore.setRowCount(0);
+        new Thread(() -> {
+            LoadingScreen load = new LoadingScreen("Đang tải...");
+            load.setVisible(true);
+            students = StudentDTO.getStudentDTOList(WebMethods.getStudentsByClass(clazz));
+            for (StudentDTO s : students) {
+                mScore.addRow(new Object[]{s.getId(), s.getName(), ""});
+            }
+            load.dispose();
+        }).start();
     }
 }

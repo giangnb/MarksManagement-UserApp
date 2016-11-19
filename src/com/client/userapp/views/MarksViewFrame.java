@@ -7,6 +7,7 @@ package com.client.userapp.views;
 
 import com.client.service.Clazz;
 import com.client.service.Score;
+import com.client.service.Student;
 import com.client.service.Subject;
 import com.client.userapp.Application;
 import com.client.userapp.constants.WebMethods;
@@ -33,6 +34,7 @@ public class MarksViewFrame extends javax.swing.JPanel {
     private Clazz cla;
     private DefaultTableModel mMarks;
     private int maxCo=0;
+    private int isChanging = 1;
 
     /**
      * Creates new form MarksViewPanel
@@ -80,20 +82,20 @@ public class MarksViewFrame extends javax.swing.JPanel {
         tblMarks.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblMarks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Học sinh", "Hệ số 1", "Hệ số 2", "Hệ số 3"
+                "MS", "Học sinh", "Hệ số 1", "Hệ số 2", "Hệ số 3"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -114,7 +116,7 @@ public class MarksViewFrame extends javax.swing.JPanel {
         });
         jScrollPane3.setViewportView(tblMarks);
 
-        cboSubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Toán", "Lý ", "Hóa" }));
+        cboSubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Đang tải --", "A", "B", "C" }));
         cboSubject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboSubjectActionPerformed(evt);
@@ -127,7 +129,7 @@ public class MarksViewFrame extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         jLabel2.setText("Lớp");
 
-        cboClass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10A1", "10A2", "10A3", "10A4" }));
+        cboClass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Đang tải --", "1", "2", "3" }));
         cboClass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboClassActionPerformed(evt);
@@ -143,6 +145,11 @@ public class MarksViewFrame extends javax.swing.JPanel {
         });
 
         btnEditMark.setText("Sửa điểm");
+        btnEditMark.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditMarkActionPerformed(evt);
+            }
+        });
 
         btnViewMarks.setText("Xem điểm");
         btnViewMarks.addActionListener(new java.awt.event.ActionListener() {
@@ -203,7 +210,26 @@ public class MarksViewFrame extends javax.swing.JPanel {
 
     private void btnInputMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInputMarkActionPerformed
         // TODO add your handling code here:
-//        JFrame fr = new InputMarksScreen(sub);
+        if (tblMarks.getSelectedRow() < 0) {
+            // Nhập điểm cả lớp
+            WindowUtility.showModalDialog(null, "Nhập điểm", new InputMarksScreen(sub, cla));
+            return;
+        }
+        int ch = WindowUtility.showConfirm(this, "Nhập điểm", "Hãy chọn chế độ nhập điểm", new String[]{"Nhập điểm 1 học sinh", "Nhập điểm cả lớp"});
+        switch (ch) {
+            case 0:
+                Student stu = student.get(tblMarks.getSelectedRow()).toStudent();
+                WindowUtility.showModalDialog(null, "Điểm số", new EditMarksScreen(stu, sub));
+                break;
+            case 1:
+                if (student!=null && isChanging==0) {
+                    WindowUtility.showModalDialog(null, "Nhập điểm", new InputMarksScreen(sub, cla, student));
+                } 
+                else {
+                    WindowUtility.showModalDialog(null, "Nhập điểm", new InputMarksScreen(sub, cla));
+                }
+                break;
+        }
     }//GEN-LAST:event_btnInputMarkActionPerformed
 
     private void btnViewMarksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewMarksActionPerformed
@@ -212,7 +238,11 @@ public class MarksViewFrame extends javax.swing.JPanel {
             WindowUtility.showMessage(this, "Thông báo", "Vui lòng chọn đầy đủ lớp và môn học!", WindowUtility.WARNING);
             return;
         }
+        isChanging = 0;
+        btnEditMark.setEnabled(false);
+        btnInputMark.setEnabled(true);
         new Thread(() -> {
+            btnViewMarks.setEnabled(false);
             mMarks.setRowCount(0);
             
             LoadingScreen load = new LoadingScreen("Đang tải...");
@@ -225,6 +255,7 @@ public class MarksViewFrame extends javax.swing.JPanel {
             for (StudentDTO s : student) {
                 marks = new String[maxCo];
                 ctx = new ArrayList<>();
+                ctx.add(s.getId()+"");
                 ctx.add(s.getName());
                 
                 score = WebMethods.getScoresByStudentAndSubject(s.toStudent(), sub);
@@ -243,6 +274,7 @@ public class MarksViewFrame extends javax.swing.JPanel {
             }
             
             load.dispose();
+            btnViewMarks.setEnabled(true);
         }).start();
     }//GEN-LAST:event_btnViewMarksActionPerformed
 
@@ -257,8 +289,14 @@ public class MarksViewFrame extends javax.swing.JPanel {
             } else {
                 cla = null;
             }
+            isChanging = 1;
         } catch (Exception ex) {
             // ignore
+        }
+        if (cla!=null && sub!=null) {
+            btnInputMark.setEnabled(true);
+        } else {
+            btnInputMark.setEnabled(false);
         }
     }//GEN-LAST:event_cboClassActionPerformed
 
@@ -273,8 +311,14 @@ public class MarksViewFrame extends javax.swing.JPanel {
             } else {
                 sub = null;
             }
+            isChanging = 1;
         } catch (Exception ex) {
             //ignore
+        }
+        if (cla!=null && sub!=null) {
+            btnInputMark.setEnabled(true);
+        } else {
+            btnInputMark.setEnabled(false);
         }
     }//GEN-LAST:event_cboSubjectActionPerformed
 
@@ -284,8 +328,17 @@ public class MarksViewFrame extends javax.swing.JPanel {
             return;
         }
         btnEditMark.setEnabled(true);
-        btnInputMark.setEnabled(true);
     }//GEN-LAST:event_tblMarksMouseClicked
+
+    private void btnEditMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditMarkActionPerformed
+        // TODO add your handling code here:
+        try {
+            Student stu = student.get(tblMarks.getSelectedRow()).toStudent();
+            WindowUtility.showModalDialog(null, "Sửa điểm", new EditMarksScreen(stu, sub));
+        } catch (Exception ex) {
+            // ignore
+        }
+    }//GEN-LAST:event_btnEditMarkActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -308,7 +361,7 @@ public class MarksViewFrame extends javax.swing.JPanel {
 
             // Main thread:
             mMarks = (DefaultTableModel) tblMarks.getModel();
-            mMarks.setColumnCount(1);
+            mMarks.setColumnCount(2);
             maxCo = Integer.parseInt(Application.PROP.get("max_coeff").toString());
             for (int i = 1; i <= maxCo; i++) {
                 mMarks.addColumn("Hệ số " + i);

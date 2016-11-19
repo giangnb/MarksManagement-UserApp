@@ -10,8 +10,8 @@ import com.client.service.Clazz;
 import com.client.service.Subject;
 import com.client.userapp.Application;
 import com.client.userapp.constants.WebMethods;
+import com.client.userapp.constants.WindowUtility;
 import javax.swing.DefaultListModel;
-import javax.swing.ListModel;
 
 /**
  *
@@ -75,6 +75,11 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
 
         btnArchive.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnArchive.setText("Tổng kết");
+        btnArchive.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnArchiveActionPerformed(evt);
+            }
+        });
 
         lblLop.setText("Lớp:");
 
@@ -210,6 +215,12 @@ public class ClassSummariseFrame extends javax.swing.JPanel {
         // TODO add your handling code here:
         ClassViewFrame.selectTab(1);
     }//GEN-LAST:event_btnViewStudentListActionPerformed
+
+    private void btnArchiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArchiveActionPerformed
+        // TODO add your handling code here:
+        WindowUtility.showMessage(this, "Tổng kết điểm", "Điểm số của những học sinh đã được tổng kết và chốt sổ điểm\nsẽ không thể thay đổi được.", WindowUtility.WARNING);
+        WindowUtility.showModalDialog(null, "Tổng kết & chốt sổ điểm", new ScoreArchiveScreen(clazz));
+    }//GEN-LAST:event_btnArchiveActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -11,6 +11,7 @@ import com.client.service.Student;
 import com.client.service.Subject;
 import com.client.userapp.Application;
 import com.client.userapp.constants.WebMethods;
+import com.client.userapp.constants.WindowUtility;
 import com.client.userapp.dto.StudentDTO;
 import com.client.userapp.dto.SubjectDTO;
 import java.util.ArrayList;
@@ -159,6 +160,7 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         // TODO add your handling code here:
+        btnDetail.setEnabled(false);
         new Thread(() -> {
             LoadingScreen load = new LoadingScreen("Đang tải...");
             load.setVisible(true);
@@ -222,8 +224,7 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
             );
             Student stu = WebMethods.getStudentById(id);
 
-            StudentMarksScreen screen = new StudentMarksScreen(stu, sub);
-            screen.setVisible(true);
+            WindowUtility.showModalDialog(null, "Chi tiết điểm học sinh", new StudentMarksScreen(stu, sub));
 
             load.dispose();
             btnDetail.setEnabled(true);
