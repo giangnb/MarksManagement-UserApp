@@ -315,7 +315,7 @@ public class ScoreArchiveScreen extends javax.swing.JFrame {
         if (lstStudents.getSelectedIndex() < 0 || lstStudents.getSelectedIndex() >= students.size()) {
             return;
         }
-        if (lstStudents.getValueIsAdjusting()) {
+        if (!lstStudents.getValueIsAdjusting()) {
             current = students.get(lstStudents.getSelectedIndex());
             lblStudentName.setText(current.getName());
             lblStudetnId.setText(current.getId() + "");

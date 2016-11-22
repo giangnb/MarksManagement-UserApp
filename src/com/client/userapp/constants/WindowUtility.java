@@ -23,6 +23,7 @@
  */
 package com.client.userapp.constants;
 
+import com.client.userapp.Application;
 import com.client.userapp.views.LoadingScreen;
 import java.awt.Component;
 import java.util.concurrent.Callable;
@@ -46,6 +47,7 @@ public final class WindowUtility {
         dialog.add(dialogFrame.getContentPane());
         dialog.setMinimumSize(dialogFrame.getSize());
         dialog.setLocationRelativeTo(owner);
+        dialog.setIconImage(Application.ICON);
         dialog.setVisible(true);
         return dialog;
     }
@@ -55,6 +57,7 @@ public final class WindowUtility {
         dialog.add(dialogFrame);
         dialog.setMinimumSize(size.getDimension());
         dialog.setLocationRelativeTo(owner);
+        dialog.setIconImage(Application.ICON);
         dialog.setVisible(true);
         return dialog;
     }

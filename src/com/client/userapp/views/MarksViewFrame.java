@@ -259,15 +259,20 @@ public class MarksViewFrame extends javax.swing.JPanel {
                 ctx.add(s.getName());
                 
                 score = WebMethods.getScoresByStudentAndSubject(s.toStudent(), sub);
-                for (String m : marks) {
-                    m = "";
+                for (int i = 0; i < marks.length; i++) {
+                    marks[i] = " ";
                 }
                 for (Score sc : score) {
+                    if (marks[sc.getCoefficient()-1]==null) {
+                        marks[sc.getCoefficient()-1] = " ";
+                    }
                     marks[sc.getCoefficient()-1] += sc.getScore()+" ; ";
                 }
                 for (String m : marks) {
-                    if (m!=null) {
-                        ctx.add(m.substring(4, m.length()-2));
+                    if (!m.equals(" ")) {
+                        ctx.add(m.substring(1, m.length()-3));
+                    } else {
+                        ctx.add("");
                     }
                 }
                 mMarks.addRow(ctx.toArray());

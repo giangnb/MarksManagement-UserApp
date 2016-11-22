@@ -194,7 +194,7 @@ public class UserAccountFrame extends javax.swing.JPanel {
         if (validateForm()) {
             String pass = new String(txtPassword.getPassword());
             Teacher t = WebMethods.teacherLogin(txtName.getText(), pass);
-            if (!Application.TEACHER.equals(t)) {
+            if (t==null) {
                 lblErrors.setText("Mật khẩu cũ không đúng");
                 return;
             }
