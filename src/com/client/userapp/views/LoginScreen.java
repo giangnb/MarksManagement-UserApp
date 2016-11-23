@@ -306,6 +306,9 @@ public class LoginScreen extends JFrame {
     private void saveUserToFile(String text) {
         File f = new File("userid.cfg");
         try {
+            if (f.exists()) {
+                f.delete();
+            }
             Files.write(f.toPath(), text.getBytes(), StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
             // ignore
