@@ -191,7 +191,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
 
     private void btnCompleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteActionPerformed
         // TODO add your handling code here:
-        if (tblScore.getSelectedRow()>=0 && tblScore.getSelectedColumn()>=0) {
+        if (tblScore.getSelectedRow() >= 0 && tblScore.getSelectedColumn() >= 0) {
             tblScore.getCellEditor(tblScore.getSelectedRow(), tblScore.getSelectedColumn()).stopCellEditing();
         }
         int ch = -1;
@@ -200,6 +200,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
                 new String[]{"Tôi đã nhập điểm xong", "Tiếp tục nhập điểm"});
         if (ch == 0) {
             java.util.List<Score> scores = new ArrayList<>();
+            short coeff = Short.parseShort(txtCoefficient.getValue().toString());
             Score sc;
             double val;
             int invalids = 0;
@@ -209,8 +210,13 @@ public class InputMarksScreen extends javax.swing.JFrame {
                     sc.setStudentId(students.get(i).toStudent());
                     sc.setSubjectId(subject);
                     sc.setTeacherId(Application.TEACHER);
-                    sc.setCoefficient(Short.parseShort(txtCoefficient.getValue().toString()));
-                    val = Double.parseDouble(mScore.getValueAt(i, 2).toString().replace(",", "."));
+                    sc.setCoefficient(coeff);
+                    String scoreStr = mScore.getValueAt(i, 2).toString().replace(" ", "").replace(",", ".");
+                    if(scoreStr.length()<=0) {
+                        invalids++;
+                        continue;
+                    }
+                    val = Double.parseDouble(scoreStr);
                     sc.setScore(val);
                 } catch (NumberFormatException ex) {
                     invalids++;
