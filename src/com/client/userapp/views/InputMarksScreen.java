@@ -217,6 +217,7 @@ public class InputMarksScreen extends javax.swing.JFrame {
                     continue;
                 }
                 scores.add(sc);
+                students.remove(i);
                 mScore.removeRow(i);
             }
             final int sendCount = scores.size();

@@ -191,6 +191,7 @@ public class UserAccountFrame extends javax.swing.JPanel {
 
     private void btnChangePassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePassActionPerformed
         // TODO add your handling code here:
+        lblErrors.setText("Xin chờ...");
         if (validateForm()) {
             String pass = new String(txtPassword.getPassword());
             Teacher t = WebMethods.teacherLogin(txtName.getText(), pass);
@@ -198,7 +199,13 @@ public class UserAccountFrame extends javax.swing.JPanel {
                 lblErrors.setText("Mật khẩu cũ không đúng");
                 return;
             }
-            WebMethods.updateTeacherPassword(pass);
+            Application.TEACHER.setPass(pass);
+            int result = WebMethods.updateTeacher(Application.TEACHER);
+            if (result>0) {
+                lblErrors.setText("Đổi mật khẩu thành công.");
+            } else {
+                lblErrors.setText("Đổi mật khẩu không thành công, hãy thử lại!");
+            }
         }
     }//GEN-LAST:event_btnChangePassActionPerformed
 

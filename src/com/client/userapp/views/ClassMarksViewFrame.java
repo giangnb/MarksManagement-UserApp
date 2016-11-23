@@ -227,10 +227,9 @@ public class ClassMarksViewFrame extends javax.swing.JPanel {
                     mTblScore.getValueAt(tblScore.getSelectedRow(), 0).toString()
             );
             Student stu = WebMethods.getStudentById(id);
+            load.dispose();
 
             WindowUtility.showModalDialog(null, "Chi tiết điểm học sinh", new StudentMarksScreen(stu, sub));
-
-            load.dispose();
             btnDetail.setEnabled(true);
         }).start();
     }//GEN-LAST:event_btnDetailActionPerformed
